@@ -8,7 +8,6 @@ static std::atomic<unsigned long long> idDataBufGen = 0;
 IoDataBuffer::IoDataBuffer()
     :
     mCurPos(0),
-    mLogger(Logger::getCurrentLogger()),
     REGULAR_BUFFER_SIZE(128)
 {
     const_cast<int&>(REGULAR_BUFFER_SIZE) = std::max(NetworkEngine::getInstance()->getIoDataBufferNum(), REGULAR_BUFFER_SIZE);

@@ -27,7 +27,7 @@ void TcpListener::start(const uint16& port, int backlog)
         return;
     }
 
-    LOG_INFO(mLogger, "server start on %s ...", mNetworkHandler->getEndPoint().toString().c_str());
+    LOG_INFO("server start on %s ...", mNetworkHandler->getEndPoint().toString().c_str());
 
     waitForCleanup();
 }

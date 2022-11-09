@@ -1,7 +1,6 @@
 #pragma once
 
 #include "Singleton.h"
-#include "Logger.h"
 #include "Xml.h"
 
 class NetworkEngine : public ISingleton<NetworkEngine>

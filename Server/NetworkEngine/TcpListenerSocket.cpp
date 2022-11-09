@@ -19,32 +19,32 @@ bool TcpListenerSocket::listen(const uint16& port, int backlog)
 {
     if (isListening())
     {
-        LOG_ERROR(mLogger, "TcpListenerSocket already listening");
+        LOG_ERROR("TcpListenerSocket already listening");
         return false;
     }
 
     if (!mAcceptExFn.initialize(mSocket))
     {
-        LOG_ERROR(mLogger, "initialize accept fn failed : %s", get_last_err_msg());
+        LOG_ERROR("initialize accept fn failed : %s", get_last_err_msg());
         return false;
     }
 
     if (!mGetAcceptExSockAddrsFn.initialize(mSocket))
     {
-        LOG_ERROR(mLogger, "initialize update accept context fn failed");
+        LOG_ERROR("initialize update accept context fn failed");
         return false;
     }
 
     EndPoint endPoint = EndPoint("127.0.0.1", port);
     if (check_sock_error(::bind(mSocket, endPoint.getData(), (int)endPoint.getSize())))
     {
-        LOG_ERROR(mLogger, "bind error : %s, end point : %s ", get_last_err_msg(), endPoint.toString().c_str());
+        LOG_ERROR("bind error : %s, end point : %s ", get_last_err_msg(), endPoint.toString().c_str());
         return false;
     }
 
     if (check_sock_error(::listen(mSocket, backlog)))
     {
-        LOG_ERROR(mLogger, "listen error : %s, end point : %s ", get_last_err_msg(), endPoint.toString().c_str());
+        LOG_ERROR("listen error : %s, end point : %s ", get_last_err_msg(), endPoint.toString().c_str());
         return false;
     }
 
@@ -62,7 +62,7 @@ bool TcpListenerSocket::accept(SOCKET& hAcceptSocket, SOCKADDR_IN* acceptedSocke
 
     if (hAcceptSocket == INVALID_SOCKET)
     {
-        LOG_ERROR(mLogger, "accept failed : %s", get_last_err_msg());
+        LOG_ERROR("accept failed : %s", get_last_err_msg());
         return false;
     }
 
@@ -87,12 +87,12 @@ bool TcpListenerSocket::accept(SOCKET hAcceptSocket)
     //DWORD errorID = WSAGetLastError();
     //if (res == SOCKET_ERROR && errorID != ERROR_IO_PENDING)
     //{
-    //    LOG_ERROR(mLogger, "accept ex failed %s", get_last_err_msg());
+    //    LOG_ERROR("accept ex failed %s", get_last_err_msg());
 
     //    return false;
     //}
 
-    //LOG_INFO(mLogger, "accept pending ...");
+    //LOG_INFO("accept pending ...");
 
     // return true;
 
@@ -103,7 +103,7 @@ bool TcpListenerSocket::onAccept(SOCKET acceptedSocket, SOCKADDR_IN* acceptedSoc
 {
    /* if (check_sock_error(setsockopt(acceptedSocket, SOL_SOCKET, SO_UPDATE_ACCEPT_CONTEXT, (char*)&mSocket, sizeof(mSocket))))
     {
-        LOG_ERROR(mLogger, "SO_UPDATE_ACCEPT_CONTEXT failed : %s", get_last_err_msg());
+        LOG_ERROR("SO_UPDATE_ACCEPT_CONTEXT failed : %s", get_last_err_msg());
         return false;
     }
 
@@ -123,7 +123,7 @@ bool TcpListenerSocket::onAccept(SOCKET acceptedSocket, SOCKADDR_IN* acceptedSoc
 
     if (acceptedSocketAddress == nullptr || RemoteAddress == nullptr)
     {
-        LOG_ERROR(mLogger, "GetAcceptExSockAddrsFn failed : %s", get_last_err_msg());
+        LOG_ERROR("GetAcceptExSockAddrsFn failed : %s", get_last_err_msg());
         return false;
     }
 

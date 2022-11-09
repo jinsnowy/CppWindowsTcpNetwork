@@ -1,6 +1,5 @@
 #include "pch.h"
 #include "Xml.h"
-#include "Logger.h"
 
 XmlElement* XmlElement::findChild(const std::string& key)
 {
@@ -52,13 +51,12 @@ bool Xml::read(const std::string& rootName, const std::string& filePath)
 
 	tinyxml2::XMLError error;
 	configName = rootName;
-	Logger* logger = Logger::getInstance();
 
-	const auto check_error = [logger](tinyxml2::XMLError err)
+	const auto check_error = [](tinyxml2::XMLError err)
 	{
 		if (err != tinyxml2::XMLError::XML_SUCCESS)
 		{
-			LOG_ERROR(logger, "XML parsing error %s", tinyxml2::XMLDocument::ErrorIDToName(err));
+			LOG_ERROR("XML parsing error %s", tinyxml2::XMLDocument::ErrorIDToName(err));
 			return true;
 		}
 
@@ -116,7 +114,7 @@ bool Xml::read(const std::string& rootName, const std::string& filePath)
 	}
 	catch (std::exception e)
 	{
-		LOG_ERROR(logger, "XML parsing exception %s", e.what());
+		LOG_ERROR("XML parsing exception %s", e.what());
 	}
 
 	return false;

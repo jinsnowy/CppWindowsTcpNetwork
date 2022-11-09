@@ -6,9 +6,6 @@ private:
 	unsigned long long mId;
 
 protected:
-	Logger* mLogger;
-
-protected:
 	NetworkObjectBase();
 	virtual ~NetworkObjectBase() = default;
 

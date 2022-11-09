@@ -52,7 +52,7 @@ bool TcpActiveSocket::write(const std::shared_ptr<pkt::Packet>& packet)
 	}
 	else
 	{
-		LOG_ERROR(mLogger, "write packet on disconnected");
+		LOG_ERROR("write packet on disconnected");
 		return false;
 	}
 }
@@ -69,26 +69,26 @@ bool TcpActiveSocket::read(std::vector<std::shared_ptr<pkt::Packet>>& packets)
 		DWORD dwError = WSAGetLastError();
 		if (dwError == WSA_IO_PENDING)
 		{
-			LOG_INFO(mLogger, "socket %s recv io pending ...", toString().c_str());
+			LOG_INFO("socket %s recv io pending ...", toString().c_str());
 			return true;
 		}
 		else if (dwError == WSA_OPERATION_ABORTED)
-			LOG_INFO(mLogger, "socket %s closed.", toString().c_str());
+			LOG_INFO("socket %s closed.", toString().c_str());
 		else
-			LOG_ERROR(mLogger, "socket recv error %s", get_last_err_msg());
+			LOG_ERROR("socket recv error %s", get_last_err_msg());
 
 		return false;
 	}
 
 	if (recvBytes == 0)
 	{
-		LOG_ERROR(mLogger, "no data to read");
+		LOG_ERROR("no data to read");
 		return false;
 	}
 
 	if (!mRdBuffer->checkRecvBytes(recvBytes))
 	{
-		LOG_ERROR(mLogger, "check recv bytes failed : %s", mRdBuffer->checkRecvBytesErrMsg(recvBytes).c_str());
+		LOG_ERROR("check recv bytes failed : %s", mRdBuffer->checkRecvBytesErrMsg(recvBytes).c_str());
 		return false;
 	}
 
@@ -99,7 +99,7 @@ bool TcpActiveSocket::read(std::vector<std::shared_ptr<pkt::Packet>>& packets)
 		std::shared_ptr<pkt::Packet> packet;
 		if (!mPktManager->crackMessage(typeCode, byteStream, packet))
 		{
-			LOG_ERROR(mLogger, "crack message failed for typecode (%d)", typeCode);
+			LOG_ERROR("crack message failed for typecode (%d)", typeCode);
 			return false;
 		}
 
@@ -121,9 +121,9 @@ bool TcpActiveSocket::readAsync()
 	{
 		DWORD dwLastError = WSAGetLastError();
 		if (dwLastError == WSA_OPERATION_ABORTED || dwLastError == WSAECONNRESET)
-			LOG_INFO(mLogger, "socket %s closed.", toString().c_str());
+			LOG_INFO("socket %s closed.", toString().c_str());
 		else
-			LOG_ERROR(mLogger, "socket recv error %d, %s", dwLastError, get_last_err_msg());
+			LOG_ERROR("socket recv error %d, %s", dwLastError, get_last_err_msg());
 
 		return false;
 	}
@@ -135,13 +135,13 @@ bool TcpActiveSocket::getPacketHandlerCallback(int typeCode, const pkt::PacketHa
 {
 	if (mPacketHandler == nullptr)
 	{
-		LOG_ERROR(mLogger, "null handler");
+		LOG_ERROR("null handler");
 		return false;
 	}
 
 	if (!mPacketHandler->getHandler(typeCode, callback))
 	{
-		LOG_INFO(mLogger, "no handler registered for typecode (%d)", typeCode);
+		LOG_INFO("no handler registered for typecode (%d)", typeCode);
 		return false;
 	}
 
@@ -153,7 +153,7 @@ bool TcpActiveSocket::writeAsync(const std::shared_ptr<Packet>& packet)
 	int packetSize = packet->getSize();
 	if (packetSize > MAX_PACKET_SIZE)
 	{
-		LOG_ERROR(mLogger, "packet is too big %d", packetSize);
+		LOG_ERROR("packet is too big %d", packetSize);
 		close("packet size is too big");
 		return false;
 	}
@@ -161,7 +161,7 @@ bool TcpActiveSocket::writeAsync(const std::shared_ptr<Packet>& packet)
 	unsigned char* bufferPtr = nullptr;
 	if (!mWrBuffer->getWriteBuffer(packetSize, &bufferPtr))
 	{
-		LOG_ERROR(mLogger, "out of memory in write buffer %s", mWrBuffer->getVerbose().c_str());
+		LOG_ERROR("out of memory in write buffer %s", mWrBuffer->getVerbose().c_str());
 		close("out of memory in write buffer");
 		return false;
 	}
@@ -169,7 +169,7 @@ bool TcpActiveSocket::writeAsync(const std::shared_ptr<Packet>& packet)
 	const auto& packetBytes = packet->serialize();
 	if ((int)packetBytes.size() != packetSize)
 	{
-		LOG_ERROR(mLogger, "invalid packet size %d != %d", (int)packetBytes.size(), packetSize);
+		LOG_ERROR("invalid packet size %d != %d", (int)packetBytes.size(), packetSize);
 		close("invalid packet size");
 		return false;
 	}
@@ -183,9 +183,9 @@ bool TcpActiveSocket::writeAsync(const std::shared_ptr<Packet>& packet)
 		&& was_io_pending(WSAGetLastError()) == false)
 	{
 		if (WSAGetLastError() == WSA_OPERATION_ABORTED)
-			LOG_INFO(mLogger, "socket %s closed.", toString().c_str());
+			LOG_INFO("socket %s closed.", toString().c_str());
 		else
-			LOG_ERROR(mLogger, "socket write error %s", get_last_err_msg());
+			LOG_ERROR("socket write error %s", get_last_err_msg());
 
 		return false;
 	}

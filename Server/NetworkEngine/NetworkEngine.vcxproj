@@ -78,13 +78,13 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
-    <OutDir>$(SolutionDir)..\Lib\</OutDir>
+    <OutDir>$(SolutionDir)..\Lib\$(Configuration)\</OutDir>
     <TargetName>$(ProjectName)d</TargetName>
     <IncludePath>$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
-    <OutDir>$(SolutionDir)..\Lib\</OutDir>
+    <OutDir>$(SolutionDir)..\Lib\$(Configuration)\</OutDir>
     <IncludePath>$(IncludePath)</IncludePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
@@ -139,10 +139,8 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
     <PostBuildEvent>
-      <Command>cd $(SolutionDir)..
-call CopyHeader.bat .\Server\NetworkEngine\*.h include\networkengine
-cd $(SolutionDir)..
-call CopyGenerated.bat .\Generated\Generated*.h include\networkengine</Command>
+      <Command>
+      </Command>
     </PostBuildEvent>
     <PreBuildEvent>
       <Command>
@@ -187,9 +185,8 @@ call CopyGenerated.bat .\Generated\Generated*.h include\networkengine</Command>
     </Lib>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\Include\boost\stacktrace\frame.hpp" />
-    <ClInclude Include="..\..\Include\boost\stacktrace\stacktrace.hpp" />
     <ClInclude Include="AcceptorFactory.h" />
+    <ClInclude Include="CorePch.h" />
     <ClInclude Include="Xml.h" />
     <ClInclude Include="ConnectorFactory.h" />
     <ClInclude Include="DefaultPacketStruct.h" />

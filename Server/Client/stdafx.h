@@ -1,9 +1,7 @@
 #pragma once
 
-#include <networkengine\pch.h>
+#include <CorePch.h>
 
-
-#pragma comment(lib, "ws2_32.lib")
 #ifdef _DEBUG
 #pragma comment(lib, "NetworkEngined.lib")
 #else

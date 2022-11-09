@@ -40,7 +40,6 @@ public:
 	virtual void shutdown();
 
 protected:
-	Logger* mLogger;
 	bool initiateAccept(IListener* networkHandler);
 	void waitForCleanup();
 

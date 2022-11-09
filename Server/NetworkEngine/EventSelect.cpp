@@ -4,7 +4,6 @@
 
 EventSelect::EventSelect()
     :
-	mLogger(Logger::getInstance()),
 	mThreadHandler(nullptr),
 	mDisposed(false)
 {
@@ -18,7 +17,7 @@ bool EventSelect::initialize()
 {
 	if (mDisposed)
 	{
-		LOG_ERROR(mLogger, "already disposed");
+		LOG_ERROR("already disposed");
 		return false;
 	}
 
@@ -32,7 +31,7 @@ void EventSelect::shutdown()
     bool expected = false;
 	if (mDisposed.compare_exchange_strong(expected, true) == false)
 	{
-		LOG_ERROR(mLogger, "already disposed");
+		LOG_ERROR("already disposed");
 		return;
 	}
 
@@ -49,8 +48,7 @@ EventSelect::SelectThreadHandler::SelectThreadHandler(EventSelect& OwnerIn)
     mSelectEvent(NULL),
     mStartupEvent(NULL),
     mDestroyEvent(NULL),
-	mDisposed(false),
-    mLogger(Logger::getInstance())
+	mDisposed(false)
 {
 }
 
@@ -66,7 +64,7 @@ bool EventSelect::SelectThreadHandler::initialize()
 {
 	if (mDisposed)
 	{
-		LOG_ERROR(mLogger, "select thread handler disposed");
+		LOG_ERROR("select thread handler disposed");
 		return false;
 	}
 
@@ -83,14 +81,14 @@ bool EventSelect::SelectThreadHandler::initialize()
 	DWORD dwResult =::WaitForSingleObject(mStartupEvent, 10000);
 	if (dwResult != WAIT_OBJECT_0)
 	{
-		LOG_ERROR(mLogger, "init select thread error %s", get_last_err_msg());
+		LOG_ERROR("init select thread error %s", get_last_err_msg());
 		return false;
 	}
 
 	SOCKET hSocket = mOwner.getSocketHandle();
 	if (WSAEventSelect(hSocket, mSelectEvent, FD_CONNECT | FD_CLOSE | FD_READ) != 0)
 	{
-		LOG_ERROR(mLogger, "WSAEventSelect failed : %s", get_last_err_msg());
+		LOG_ERROR("WSAEventSelect failed : %s", get_last_err_msg());
 		return false;
 	}
 
@@ -102,7 +100,7 @@ void EventSelect::SelectThreadHandler::shutdown()
     bool expected = false;
     if (mDisposed.compare_exchange_strong(expected, true) == false)
     {
-        LOG_ERROR(mLogger, "select thread handler already shutdown");
+        LOG_ERROR("select thread handler already shutdown");
         return;
     }
 
@@ -139,7 +137,7 @@ void EventSelect::SelectThreadHandler::SelectThreadCallback()
 		{
 			case destroyEventID:
 			{
-				LOG_INFO(mLogger, "destroy event on select thread");
+				LOG_INFO("destroy event on select thread");
 				return;
 			}
 			case normalEventID:
@@ -148,7 +146,7 @@ void EventSelect::SelectThreadHandler::SelectThreadCallback()
 
 				if (eventID == SOCKET_ERROR)
 				{
-					LOG_ERROR(mLogger, "socket error in event select : %s", get_last_err_msg());
+					LOG_ERROR("socket error in event select : %s", get_last_err_msg());
 					return;
 				}
 				else
@@ -158,7 +156,7 @@ void EventSelect::SelectThreadHandler::SelectThreadCallback()
 						int errCode = networkEvents.iErrorCode[FD_CONNECT_BIT];
 						if (errCode)
 						{
-							LOG_ERROR(mLogger, "connect error in event select : %d %s", errCode, get_last_err_msg_code(errCode));
+							LOG_ERROR("connect error in event select : %d %s", errCode, get_last_err_msg_code(errCode));
 
 							mOwner.onIoConnectedFailed();
 							continue;
@@ -171,7 +169,7 @@ void EventSelect::SelectThreadHandler::SelectThreadCallback()
 						int errCode = networkEvents.iErrorCode[FD_READ_BIT];
 						if (errCode)
 						{
-							LOG_ERROR(mLogger, "read error in event select : %d %s", errCode, get_last_err_msg_code(errCode));
+							LOG_ERROR("read error in event select : %d %s", errCode, get_last_err_msg_code(errCode));
 							continue;
 						}
 
@@ -184,11 +182,11 @@ void EventSelect::SelectThreadHandler::SelectThreadCallback()
 						{
 							if (errCode == WSAECONNABORTED)
 							{
-								LOG_ERROR(mLogger, "server program shutdown");
+								LOG_ERROR("server program shutdown");
 							}
 							else
 							{
-								LOG_ERROR(mLogger, "close error in event select : %d %s", errCode, get_last_err_msg_code(errCode));
+								LOG_ERROR("close error in event select : %d %s", errCode, get_last_err_msg_code(errCode));
 							}
 						
 							continue;
@@ -199,7 +197,7 @@ void EventSelect::SelectThreadHandler::SelectThreadCallback()
 				}
 			}break;
 			default:
-				LOG_ERROR(mLogger, "unknown event in event select : %s", get_last_err_msg());
+				LOG_ERROR("unknown event in event select : %s", get_last_err_msg());
 				return;
 		}
 	}

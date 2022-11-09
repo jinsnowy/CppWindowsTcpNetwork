@@ -2,7 +2,30 @@
 #include "Logger.h"
 #include "PathManager.h"
 
-Logger::Logger()
+using namespace ns_logger;
+
+static const char* GetTag(ELogLevel level)
+{
+	switch (level)
+	{
+	case ELogLevel::Info:
+		return "Info";
+	case ELogLevel::Debug:
+		return "Debug";
+	case ELogLevel::Warn:
+		return "Warn";
+	case ELogLevel::Error:
+		return "Error";
+	case ELogLevel::Fatal:
+		return "Fatal";
+	default:
+		return "Unknown";
+	}
+}
+
+ns_logger::Logger* GLogger = ns_logger::Logger::getInstance();
+
+ns_logger::Logger::Logger()
 	:
 	mExitFlag(false),
 	mConsoleLog(true),
@@ -18,7 +41,7 @@ Logger::Logger()
 	basePath = basePath.substr(0, pos);
 }
 
-Logger::~Logger()
+ns_logger::Logger::~Logger()
 {
 	{
 		std::lock_guard<std::mutex> lk(mSync);
@@ -37,7 +60,7 @@ Logger::~Logger()
 	}
 }
 
-void Logger::write(const std::string& logs)
+void ns_logger::Logger::write(const std::string& logs)
 {
 	try 
 	{
@@ -69,7 +92,7 @@ void Logger::write(const std::string& logs)
 	}
 }
 
-void Logger::flush()
+void ns_logger::Logger::flush()
 {
 	std::string logs;
 	const auto duration = std::chrono::milliseconds(mFlushDurationMilliSec);

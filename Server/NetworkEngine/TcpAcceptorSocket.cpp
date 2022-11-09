@@ -30,13 +30,13 @@ bool TcpAcceptorSocket::onReadInternal(DWORD recvBytes)
 {
 	if (recvBytes == 0)
 	{
-		LOG_ERROR(mLogger, "recv zero bytes");
+		LOG_ERROR("recv zero bytes");
 		return false;
 	}
 
 	if (!mRdBuffer->checkRecvBytes(recvBytes))
 	{
-		LOG_ERROR(mLogger, "check recv bytes failed : %s", mRdBuffer->checkRecvBytesErrMsg(recvBytes).c_str());
+		LOG_ERROR("check recv bytes failed : %s", mRdBuffer->checkRecvBytesErrMsg(recvBytes).c_str());
 		return false;
 	}
 
@@ -48,14 +48,14 @@ bool TcpAcceptorSocket::onReadInternal(DWORD recvBytes)
 		const pkt::PacketHandlerCallback* callback;
 		if (!getPacketHandlerCallback(typeCode, &callback))
 		{
-			LOG_ERROR(mLogger, "packet handler not found for typecode (%d)", typeCode);
+			LOG_ERROR("packet handler not found for typecode (%d)", typeCode);
 			return !NetworkEngine::getInstance()->getCloseOnPacketProtocolNotFound();
 		}
 
 		std::shared_ptr<pkt::Packet> packet = nullptr;
 		if (!mPktManager->crackMessage(typeCode, byteStream, packet))
 		{
-			LOG_ERROR(mLogger, "crack message failed for typecode (%d)", typeCode);
+			LOG_ERROR("crack message failed for typecode (%d)", typeCode);
 			return false;
 		}
 
@@ -72,7 +72,7 @@ bool TcpAcceptorSocket::onWriteInternal(DWORD bytesSent)
 
 void TcpAcceptorSocket::onClose()
 {
-	LOG_INFO(mLogger, "%s connection dropped", toString().c_str());
+	LOG_INFO("%s connection dropped", toString().c_str());
 
 	setLingerOption(true, 0);
 }

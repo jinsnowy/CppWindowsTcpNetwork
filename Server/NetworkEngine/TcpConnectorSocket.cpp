@@ -22,7 +22,7 @@ bool TcpConnectorSocket::connect(const EndPoint& endPoint)
 		bool was_pending = would_block(WSAGetLastError());
 		if (!was_pending)
 		{
-			LOG_ERROR(mLogger, "conenct to %s failed : %d, %s", endPoint.toString().c_str(), WSAGetLastError(), get_last_err_msg());
+			LOG_ERROR("conenct to %s failed : %d, %s", endPoint.toString().c_str(), WSAGetLastError(), get_last_err_msg());
 			return false;
 		}
 	}
@@ -52,7 +52,7 @@ void TcpConnectorSocket::connectAsync(const EndPoint& endPoint)
 			return;
 		}
 
-		LOG_ERROR(mLogger, "conenct to %s failed : %d, %s", endPoint.toString().c_str(), WSAGetLastError(), get_last_err_msg());
+		LOG_ERROR("conenct to %s failed : %d, %s", endPoint.toString().c_str(), WSAGetLastError(), get_last_err_msg());
 	}
 }
 
@@ -83,7 +83,7 @@ std::string TcpConnectorSocket::toString() const
 
 void TcpConnectorSocket::onDisconnect()
 {
-	LOG_INFO(mLogger, "on disconnected");
+	LOG_INFO("on disconnected");
 
 	setConnected(false);
 }
@@ -100,7 +100,7 @@ bool TcpConnectorSocket::read(std::vector<std::shared_ptr<pkt::Packet>>& outPack
 	}
 	catch (std::exception e)
 	{
-		LOG_ERROR(mLogger, "read packets failed : %s", e.what());
+		LOG_ERROR("read packets failed : %s", e.what());
 		close(Format::format("exception=%s", e.what()).c_str());
 		return false;
 	}
@@ -112,7 +112,7 @@ bool TcpConnectorSocket::checkConnected()
 {
 	if (isConnected() == true)
 	{
-		LOG_ERROR(mLogger, "connected already");
+		LOG_ERROR("connected already");
 		return true;
 	}
 

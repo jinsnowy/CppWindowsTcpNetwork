@@ -1,7 +1,6 @@
 #pragma once
 
 class IConnector;
-class Logger;
 class EventSelect
 {
 	class SelectThreadHandler;

@@ -43,8 +43,8 @@
     <Filter Include="Socket">
       <UniqueIdentifier>{77985fff-a5d3-4c00-8f9c-77ad90d77f03}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Boost">
-      <UniqueIdentifier>{4077e7ea-5b29-47cb-a58a-98663e602f4b}</UniqueIdentifier>
+    <Filter Include="Main">
+      <UniqueIdentifier>{28128423-bfe3-4d5a-a58b-82333c4d0b0a}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -173,11 +173,8 @@
     <ClInclude Include="DefaultPacketStruct.h">
       <Filter>Packet</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Include\boost\stacktrace\frame.hpp">
-      <Filter>Boost</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Include\boost\stacktrace\stacktrace.hpp">
-      <Filter>Boost</Filter>
+    <ClInclude Include="CorePch.h">
+      <Filter>Main</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

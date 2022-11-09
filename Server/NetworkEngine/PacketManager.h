@@ -10,14 +10,12 @@ namespace pkt
 	{
 		friend class ISingleton<PacketManager>;
 	private:
-		Logger* mLogger;
 		IPacketFactory* mImplDefault;
 		IPacketFactory* mImpl;
 		bool mDisconnectOnFailure;
 
 	private:
 		PacketManager() : 
-			mLogger(Logger::getInstance()),
 			mImplDefault(new DefaultPacketFactory()),
 			mImpl(nullptr),
 			mDisconnectOnFailure(true)
@@ -64,7 +62,7 @@ namespace pkt
 					createPacket = mImplDefault->createPacket(typeCode);
 					if (createPacket == nullptr)
 					{
-						LOG_ERROR(mLogger, "cannot find packet for typecode(%d)", typeCode);
+						LOG_ERROR("cannot find packet for typecode(%d)", typeCode);
 						return !mDisconnectOnFailure;
 					}
 				}
@@ -74,7 +72,7 @@ namespace pkt
 			}
 			catch (std::exception e)
 			{
-				LOG_ERROR(mLogger, "crack message exception %s, typecode (%d), data length (%zd)", e.what(), typeCode, data.size());
+				LOG_ERROR("crack message exception %s, typecode (%d), data length (%zd)", e.what(), typeCode, data.size());
 				return false;
 			}
 

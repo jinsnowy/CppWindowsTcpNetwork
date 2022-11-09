@@ -7,58 +7,6 @@
 #ifndef PCH_H
 #define PCH_H
 
-// 여기에 미리 컴파일하려는 헤더 추가
-#include "framework.h"
-
-#include <cstdio>
-#include <cstdlib>
-#include <cstring>
-#include <cmath>
-
-#include <vector>
-#include <queue>
-#include <map>
-#include <set>
-#include <unordered_map>
-#include <unordered_set>
-#include <list>
-
-#include <algorithm>
-#include <mutex>
-#include <memory>
-#include <functional>
-#include <thread>
-#include <future>
-#include <string>
-#include <iostream>
-#include <iomanip>
-#include <fstream>
-#include <sstream>
-#include <type_traits>
-#include <chrono>
-
-#include "Singleton.h"
-#include "Define.h"
-#include "Common.h"
-#include "IoData.h"
-
-using std::atomic;
-using std::function;
-using std::unique_ptr;
-using std::map;
-using std::unordered_map;
-using std::string;
-using std::vector;
-using std::make_unique;
-
-#define GETSET(field, type)\
-type get##field() const { return field;}\
-void set##field(type value) { field = value;}
-
-#define GET(field)\
-type get##field() const { return field;}
-
-#define SET(field, type)\
-void set##field(type value) { field = value;}
+#include "CorePch.h"
 
 #endif //PCH_H

@@ -18,7 +18,7 @@ private:
 public:
 	ReadStream()
 		:
-		mCurPos(0), mDataPos(0), mLogger(Logger::getInstance())
+		mCurPos(0), mDataPos(0)
 	{
 		memset(mBuffer, 0, sizeof(mBuffer));
 	}
@@ -50,7 +50,7 @@ public:
 		int pktLength = Serializer::toInt32(mBuffer + mDataPos);
 		if (pktLength <= 0)
 		{
-			LOG_ERROR(mLogger, "invalid pktlength(%d) on recv(%d) (last err = %s)", pktLength, recvBytes, get_last_err_msg());
+			LOG_ERROR("invalid pktlength(%d) on recv(%d) (last err = %s)", pktLength, recvBytes, get_last_err_msg());
 			return false;
 		}
 			

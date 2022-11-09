@@ -1,6 +1,5 @@
 #include "pch.h"
 #include "Iocp.h"
-#include "Logger.h"
 #include "IoData.h"
 #include "IoDataBuffer.h"
 #include "IAcceptor.h"
@@ -10,7 +9,6 @@ Iocp::Iocp(std::function<IAcceptor*(SOCKET)> acceptorFactory)
 	:
 	mCleanupEvent(NULL),
 	mIocpHandle(NULL),
-	mLogger(Logger::getCurrentLogger()),
 	mExitFlag(false),
 	mBufferMgr(IoDataBuffer::getInstance()),
 	mAcceptorFactory(acceptorFactory),
@@ -27,7 +25,7 @@ bool Iocp::initialize()
 {
 	if (mAcceptorFactory == nullptr)
 	{
-		LOG_ERROR(mLogger, "AcceptorFactory is null");
+		LOG_ERROR("AcceptorFactory is null");
 		return false;
 	}
 
@@ -37,7 +35,7 @@ bool Iocp::initialize()
 	mIocpHandle = CreateIoCompletionPort(INVALID_HANDLE_VALUE, NULL, 0, iocpThreadNum);
 	if (mIocpHandle == NULL)
 	{
-		LOG_ERROR(mLogger, "create io completion port failed %s", get_last_err_msg());
+		LOG_ERROR("create io completion port failed %s", get_last_err_msg());
 		return false;
 	}
 	
@@ -53,7 +51,7 @@ bool Iocp::initiateAccept(IListener* networkHandler)
 {
 	if (networkHandler == nullptr)
 	{
-		LOG_ERROR(mLogger, "networkHandler is null");
+		LOG_ERROR("networkHandler is null");
 		return false;
 	}
 
@@ -86,7 +84,7 @@ void Iocp::waitForCleanup()
 {
 	::WaitForSingleObject(mCleanupEvent, INFINITE);
 
-	LOG_INFO(mLogger, "server cleanup ...");
+	LOG_INFO("server cleanup ...");
 }
 
 void Iocp::shutdown()
@@ -131,7 +129,7 @@ bool Iocp::onAccept(std::unique_ptr<IAcceptor>& client)
 {
 	if (mNetworkHandler == nullptr)
 	{
-		LOG_ERROR(mLogger, "networkHandler is null");
+		LOG_ERROR("networkHandler is null");
 		return false;
 	}
 
@@ -143,7 +141,7 @@ bool Iocp::onAccept(std::unique_ptr<IAcceptor>& client)
 
 	mAcceptorPlaceHolder->setConnectInfo(remoteAdress);
 
-	LOG_INFO(mLogger, "%s is accepted", mAcceptorPlaceHolder->toString().c_str());
+	LOG_INFO("%s is accepted", mAcceptorPlaceHolder->toString().c_str());
 	client = std::move(mAcceptorPlaceHolder);
 
 	return true;
@@ -155,7 +153,7 @@ void Iocp::onNewClient(std::unique_ptr<IAcceptor> client)
 
 	if (mManagedAcceptors.find(client->getId()) != mManagedAcceptors.end())
 	{
-		LOG_ERROR(mLogger, "duplicate new client %llu", client->getId());
+		LOG_ERROR("duplicate new client %llu", client->getId());
 		return;
 	}
 
@@ -163,7 +161,7 @@ void Iocp::onNewClient(std::unique_ptr<IAcceptor> client)
 	mIocpHandle = CreateIoCompletionPort((HANDLE)client->getHandle(), mIocpHandle, completionKey, 0);
 	if (mIocpHandle == nullptr)
 	{
-		LOG_FATAL(mLogger, "register completion port failed : %d, err %s", mAcceptorPlaceHolder->getId(), get_last_err_msg());
+		LOG_FATAL("register completion port failed : %d, err %s", mAcceptorPlaceHolder->getId(), get_last_err_msg());
 		return;
 	}
 
@@ -173,7 +171,7 @@ void Iocp::onNewClient(std::unique_ptr<IAcceptor> client)
 		return;
 	}
 
-	LOG_INFO(mLogger, "new client %llu", client->getId());
+	LOG_INFO("new client %llu", client->getId());
 	mManagedAcceptors.emplace(client->getId(), std::move(client));
 }
 
@@ -181,7 +179,7 @@ void Iocp::onLeaveClient(IAcceptor* client)
 {
 	if (client == nullptr)
 	{
-		LOG_ERROR(mLogger, "leaving client is null %d");
+		LOG_ERROR("leaving client is null %d");
 		return;
 	}
 
@@ -190,17 +188,15 @@ void Iocp::onLeaveClient(IAcceptor* client)
 	auto iter = mManagedAcceptors.find(client->getId());
 	if (iter == mManagedAcceptors.end())
 	{
-		LOG_DEBUG(mLogger, "leaving client no found %d", client->getId());
+		LOG_DEBUG("leaving client no found %d", client->getId());
 		return;
 	}
 
-	LOG_INFO(mLogger, "leaving client %d", client->getId());
+	LOG_INFO("leaving client %d", client->getId());
 }
 
 DWORD __stdcall Iocp::iocpWorkerThread()
 {
-	Logger* logger = Logger::getCurrentLogger();
-	
 	DWORD dwIoSize = 0;
 	IAcceptor* client = nullptr;
 	CIoData* ioData = nullptr;
@@ -220,30 +216,30 @@ DWORD __stdcall Iocp::iocpWorkerThread()
 			int errorID = WSAGetLastError();
 			if (errorID == WSA_OPERATION_ABORTED || errorID == ERROR_NETNAME_DELETED)
 			{
-				LOG_INFO(logger, "detect client disconnection");
+				LOG_INFO("detect client disconnection");
 			}
 			else
 			{
-				LOG_ERROR(logger, "GetQueuedCompletionStatus failed : %s", get_last_err_msg());
+				LOG_ERROR("GetQueuedCompletionStatus failed : %s", get_last_err_msg());
 			}
 		}
 
 		if (mExitFlag)
 		{
-			LOG_INFO(logger, "exit ...");
+			LOG_INFO("exit ...");
 			return 0;
 		}
 
 		if (ioData == nullptr)
 		{
-			LOG_INFO(logger, "exit ...");
+			LOG_INFO("exit ...");
 			return 0;
 		}
 		
 		IO_OPERATION ioType = ioData->getIoType();
 		if (client == nullptr)
 		{
-			LOG_ERROR(logger, "completion key is null ...");
+			LOG_ERROR("completion key is null ...");
 			continue;
 		}
 
@@ -282,9 +278,9 @@ DWORD __stdcall Iocp::iocpWorkerThread()
 			std::stringstream ss;
 			ss << boost::stacktrace::stacktrace();
 			std::string trace = ss.str();
-			LOG_ERROR(logger, "Iocp worker exception : %s\n%s", e.what(), trace.c_str());
+			LOG_ERROR("Iocp worker exception : %s\n%s", e.what(), trace.c_str());
 #else
-			LOG_ERROR(logger, "Iocp worker exception : %s", e.what());
+			LOG_ERROR("Iocp worker exception : %s", e.what());
 #endif
 		}
 	}

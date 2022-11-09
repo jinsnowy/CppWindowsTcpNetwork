@@ -80,18 +80,18 @@ void TcpConnector::onIoRead()
 void TcpConnector::onIoConnectedSucessfully()
 {
 	mConnector->setConnectInfo(mTargetEndPoint);
-	LOG_INFO(mLogger, "%s connected !!!", mConnector->toString().c_str());
+	LOG_INFO("%s connected !!!", mConnector->toString().c_str());
 }
 
 void TcpConnector::onIoConnectedFailed()
 {
-	LOG_INFO(mLogger, "%s connect failed !!!", mConnector->toString().c_str());
+	LOG_INFO("%s connect failed !!!", mConnector->toString().c_str());
 }
 
 void TcpConnector::onIoDisconnected()
 {
 	mConnector->onDisconnect();
-	LOG_INFO(mLogger, "%s disconnected !!!", mConnector->toString().c_str());
+	LOG_INFO("%s disconnected !!!", mConnector->toString().c_str());
 }
 
 SOCKET TcpConnector::getSocketHandle()
@@ -114,7 +114,7 @@ void TcpConnector::handleNetworkEvent()
 	{
 		if (!mConnector->getPacketHandlerCallback(packet->getTypeCode(), &callback))
 		{
-			LOG_ERROR(mLogger, "cannot find handler callback : %d", packet->getTypeCode());
+			LOG_ERROR("cannot find handler callback : %d", packet->getTypeCode());
 			continue;
 		}
 
@@ -125,7 +125,7 @@ void TcpConnector::handleNetworkEvent()
 		}
 		catch (std::exception e)
 		{
-			LOG_ERROR(mLogger, "handler exception %s", e.what());
+			LOG_ERROR("handler exception %s", e.what());
 		}
 	}
 }
