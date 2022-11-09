@@ -1,6 +1,6 @@
 #pragma once
-#ifndef _loggerGER_H_
-#define _loggerGER_H_
+#ifndef _LOGGER_H_
+#define _LOGGER_H_
 
 #include "Singleton.h"
 #include "DateTime.h"
