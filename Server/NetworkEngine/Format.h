@@ -11,6 +11,25 @@ private:
 	static std::string empty;
 
 public:
+	static std::string format(const char* fmt, ...)
+	{
+		va_list arg_ptr;
+
+		va_start(arg_ptr, fmt);
+		int size = vsnprintf(nullptr, 0, fmt, arg_ptr) + 1;
+		if (size <= 1) {
+			va_end(arg_ptr);
+			return "";
+		}
+
+		std::string s(size, '\0');
+		vsnprintf(&s[0], size, fmt, arg_ptr);
+		s.pop_back();
+		va_end(arg_ptr);
+		
+		return s;
+	}
+
 	template<typename ...Args>
 	static std::string format(const char* fmt, Args&& ...args)
 	{

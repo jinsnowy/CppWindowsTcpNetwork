@@ -7,44 +7,26 @@
     <Filter Include="Header">
       <UniqueIdentifier>{fe760804-647c-4ad7-b81a-bf137d8b0158}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Core\Socket">
-      <UniqueIdentifier>{5cad738b-6aba-400a-9e88-6421384a92aa}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Core\Base">
-      <UniqueIdentifier>{f073ee60-89b9-4b38-aed7-5c6594a2b3ed}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Common">
       <UniqueIdentifier>{715cf68e-6779-4784-aa25-b59f12876c44}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Core\Buffer">
-      <UniqueIdentifier>{80d2c553-eaf6-4dbe-ae85-b79fb783db32}</UniqueIdentifier>
     </Filter>
     <Filter Include="Core\Manager">
       <UniqueIdentifier>{1c8a0e96-cf64-4621-99cd-f750e643c21e}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Core\Network">
-      <UniqueIdentifier>{8b9c6759-2a17-498a-90cc-15bcddb173e0}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Core\Interface">
-      <UniqueIdentifier>{bb321b51-4216-437f-b72a-d21f9115b6da}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Packet">
-      <UniqueIdentifier>{e40f7b1b-a326-463a-ba8c-261c840f42ad}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Core\NetworkBase">
-      <UniqueIdentifier>{4b3f75d4-1a0f-4e67-82e4-213c5e06f45e}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Utility">
       <UniqueIdentifier>{b4e403ce-b700-4cb2-8069-215a377cdda1}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Core\Factory">
-      <UniqueIdentifier>{b4815ef1-ee5c-4f35-b0f2-bafe0056c0f3}</UniqueIdentifier>
     </Filter>
     <Filter Include="Socket">
       <UniqueIdentifier>{77985fff-a5d3-4c00-8f9c-77ad90d77f03}</UniqueIdentifier>
     </Filter>
     <Filter Include="Main">
       <UniqueIdentifier>{28128423-bfe3-4d5a-a58b-82333c4d0b0a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="IoEvent">
+      <UniqueIdentifier>{e40f7b1b-a326-463a-ba8c-261c840f42ad}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Memory">
+      <UniqueIdentifier>{f9894e47-0149-4aa6-bef4-bfd89482b600}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -59,15 +41,6 @@
     <ClInclude Include="Format.h">
       <Filter>Header</Filter>
     </ClInclude>
-    <ClInclude Include="TcpConnectorSocket.h">
-      <Filter>Core\Socket</Filter>
-    </ClInclude>
-    <ClInclude Include="TcpListenerSocket.h">
-      <Filter>Core\Socket</Filter>
-    </ClInclude>
-    <ClInclude Include="NetworkObjectBase.h">
-      <Filter>Core\Base</Filter>
-    </ClInclude>
     <ClInclude Include="Singleton.h">
       <Filter>Header</Filter>
     </ClInclude>
@@ -80,73 +53,13 @@
     <ClInclude Include="EndPoint.h">
       <Filter>Common</Filter>
     </ClInclude>
-    <ClInclude Include="NetworkStream.h">
-      <Filter>Core\Buffer</Filter>
-    </ClInclude>
-    <ClInclude Include="Random.h">
-      <Filter>Common</Filter>
-    </ClInclude>
-    <ClInclude Include="NetworkEngine.h">
-      <Filter>Core\Manager</Filter>
-    </ClInclude>
-    <ClInclude Include="Serializer.h">
-      <Filter>Common</Filter>
-    </ClInclude>
-    <ClInclude Include="Iocp.h">
-      <Filter>Core\NetworkBase</Filter>
-    </ClInclude>
-    <ClInclude Include="TcpListener.h">
-      <Filter>Core\Network</Filter>
-    </ClInclude>
-    <ClInclude Include="IoDataBuffer.h">
-      <Filter>Core\Buffer</Filter>
-    </ClInclude>
-    <ClInclude Include="TcpConnector.h">
-      <Filter>Core\Network</Filter>
-    </ClInclude>
-    <ClInclude Include="EventSelect.h">
-      <Filter>Core\NetworkBase</Filter>
-    </ClInclude>
-    <ClInclude Include="IListener.h">
-      <Filter>Core\Interface</Filter>
-    </ClInclude>
-    <ClInclude Include="IAcceptor.h">
-      <Filter>Core\Interface</Filter>
-    </ClInclude>
-    <ClInclude Include="Packet.h">
-      <Filter>Packet</Filter>
-    </ClInclude>
-    <ClInclude Include="PacketHandler.h">
-      <Filter>Packet</Filter>
-    </ClInclude>
-    <ClInclude Include="PacketManager.h">
-      <Filter>Packet</Filter>
-    </ClInclude>
     <ClInclude Include="Logger.h">
       <Filter>Common</Filter>
-    </ClInclude>
-    <ClInclude Include="TcpAcceptorSocket.h">
-      <Filter>Core\Socket</Filter>
-    </ClInclude>
-    <ClInclude Include="TcpActiveSocket.h">
-      <Filter>Socket</Filter>
     </ClInclude>
     <ClInclude Include="TcpSocket.h">
       <Filter>Socket</Filter>
     </ClInclude>
-    <ClInclude Include="IConnector.h">
-      <Filter>Core\Interface</Filter>
-    </ClInclude>
-    <ClInclude Include="ISender.h">
-      <Filter>Core\Interface</Filter>
-    </ClInclude>
-    <ClInclude Include="IoData.h">
-      <Filter>Core\Buffer</Filter>
-    </ClInclude>
     <ClInclude Include="Timer.h">
-      <Filter>Utility</Filter>
-    </ClInclude>
-    <ClInclude Include="DateTime.h">
       <Filter>Utility</Filter>
     </ClInclude>
     <ClInclude Include="PathManager.h">
@@ -158,86 +71,41 @@
     <ClInclude Include="Xml.h">
       <Filter>Utility</Filter>
     </ClInclude>
-    <ClInclude Include="AcceptorFactory.h">
-      <Filter>Core\Factory</Filter>
-    </ClInclude>
-    <ClInclude Include="ConnectorFactory.h">
-      <Filter>Core\Factory</Filter>
-    </ClInclude>
-    <ClInclude Include="IPacketFactory.h">
-      <Filter>Packet</Filter>
-    </ClInclude>
-    <ClInclude Include="DefaultPacketType.h">
-      <Filter>Packet</Filter>
-    </ClInclude>
-    <ClInclude Include="DefaultPacketStruct.h">
-      <Filter>Packet</Filter>
-    </ClInclude>
     <ClInclude Include="CorePch.h">
       <Filter>Main</Filter>
+    </ClInclude>
+    <ClInclude Include="NetUtils.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="DateTime.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="Stl.h">
+      <Filter>Main</Filter>
+    </ClInclude>
+    <ClInclude Include="IoService.h">
+      <Filter>IoEvent</Filter>
+    </ClInclude>
+    <ClInclude Include="IocpCore.h">
+      <Filter>IoEvent</Filter>
+    </ClInclude>
+    <ClInclude Include="IoEvent.h">
+      <Filter>IoEvent</Filter>
+    </ClInclude>
+    <ClInclude Include="MemoryPool.h">
+      <Filter>Memory</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp" />
-    <ClCompile Include="TcpConnectorSocket.cpp">
-      <Filter>Core\Socket</Filter>
-    </ClCompile>
-    <ClCompile Include="TcpListenerSocket.cpp">
-      <Filter>Core\Socket</Filter>
-    </ClCompile>
-    <ClCompile Include="NetworkObjectBase.cpp">
-      <Filter>Core\Base</Filter>
-    </ClCompile>
     <ClCompile Include="EndPoint.cpp">
       <Filter>Common</Filter>
-    </ClCompile>
-    <ClCompile Include="NetworkStream.cpp">
-      <Filter>Core\Buffer</Filter>
-    </ClCompile>
-    <ClCompile Include="NetworkEngine.cpp">
-      <Filter>Core\Manager</Filter>
-    </ClCompile>
-    <ClCompile Include="TcpListener.cpp">
-      <Filter>Core\Network</Filter>
-    </ClCompile>
-    <ClCompile Include="Iocp.cpp">
-      <Filter>Core\NetworkBase</Filter>
-    </ClCompile>
-    <ClCompile Include="IoDataBuffer.cpp">
-      <Filter>Core\Buffer</Filter>
-    </ClCompile>
-    <ClCompile Include="TcpConnector.cpp">
-      <Filter>Core\Network</Filter>
-    </ClCompile>
-    <ClCompile Include="EventSelect.cpp">
-      <Filter>Core\NetworkBase</Filter>
-    </ClCompile>
-    <ClCompile Include="IListener.cpp">
-      <Filter>Core\Interface</Filter>
-    </ClCompile>
-    <ClCompile Include="IAcceptor.cpp">
-      <Filter>Core\Interface</Filter>
-    </ClCompile>
-    <ClCompile Include="Packet.cpp">
-      <Filter>Packet</Filter>
     </ClCompile>
     <ClCompile Include="Logger.cpp">
       <Filter>Common</Filter>
     </ClCompile>
-    <ClCompile Include="TcpAcceptorSocket.cpp">
-      <Filter>Core\Socket</Filter>
-    </ClCompile>
-    <ClCompile Include="TcpActiveSocket.cpp">
-      <Filter>Socket</Filter>
-    </ClCompile>
     <ClCompile Include="TcpSocket.cpp">
       <Filter>Socket</Filter>
-    </ClCompile>
-    <ClCompile Include="IConnector.cpp">
-      <Filter>Core\Interface</Filter>
-    </ClCompile>
-    <ClCompile Include="ISender.cpp">
-      <Filter>Core\Interface</Filter>
     </ClCompile>
     <ClCompile Include="PathManager.cpp">
       <Filter>Utility</Filter>
@@ -248,14 +116,23 @@
     <ClCompile Include="Xml.cpp">
       <Filter>Utility</Filter>
     </ClCompile>
-    <ClCompile Include="AcceptorFactory.cpp">
-      <Filter>Core\Factory</Filter>
+    <ClCompile Include="NetUtils.cpp">
+      <Filter>Common</Filter>
     </ClCompile>
-    <ClCompile Include="ConnectorFactory.cpp">
-      <Filter>Core\Factory</Filter>
+    <ClCompile Include="DateTime.cpp">
+      <Filter>Common</Filter>
     </ClCompile>
-    <ClCompile Include="IPacketFactory.cpp">
-      <Filter>Packet</Filter>
+    <ClCompile Include="IoService.cpp">
+      <Filter>IoEvent</Filter>
+    </ClCompile>
+    <ClCompile Include="IocpCore.cpp">
+      <Filter>IoEvent</Filter>
+    </ClCompile>
+    <ClCompile Include="IoEvent.cpp">
+      <Filter>IoEvent</Filter>
+    </ClCompile>
+    <ClCompile Include="MemoryPool.cpp">
+      <Filter>Memory</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

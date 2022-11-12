@@ -1,5 +1,6 @@
 #include "pch.h"
 #include "Xml.h"
+#include "Logger.h"
 
 XmlElement* XmlElement::findChild(const std::string& key)
 {

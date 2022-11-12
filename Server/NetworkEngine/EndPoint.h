@@ -42,10 +42,12 @@ public:
 		return std::to_string(ntohs(mInfo.sin_port));
 	}
 
-	const SOCKADDR* getData() const
+	const SOCKADDR* getSockAddr() const
 	{
-		return (SOCKADDR*)(&mInfo);
+		return (const SOCKADDR*)(&mInfo);
 	}
+
+	SOCKADDR* getSockAddr() { return (SOCKADDR*)(&mInfo); }
 	
 	constexpr size_t getSize() const { return sizeof(SOCKADDR); }
 

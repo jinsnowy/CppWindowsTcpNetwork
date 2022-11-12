@@ -2,8 +2,6 @@
 #include "Logger.h"
 #include "PathManager.h"
 
-using namespace ns_logger;
-
 static const char* GetTag(ELogLevel level)
 {
 	switch (level)
@@ -23,9 +21,9 @@ static const char* GetTag(ELogLevel level)
 	}
 }
 
-ns_logger::Logger* GLogger = ns_logger::Logger::getInstance();
+Logger* GLogger = nullptr;
 
-ns_logger::Logger::Logger()
+Logger::Logger()
 	:
 	mExitFlag(false),
 	mConsoleLog(true),
@@ -41,7 +39,7 @@ ns_logger::Logger::Logger()
 	basePath = basePath.substr(0, pos);
 }
 
-ns_logger::Logger::~Logger()
+Logger::~Logger()
 {
 	{
 		std::lock_guard<std::mutex> lk(mSync);
@@ -60,7 +58,41 @@ ns_logger::Logger::~Logger()
 	}
 }
 
-void ns_logger::Logger::write(const std::string& logs)
+void Logger::initialize()
+{
+	GLogger = Logger::getInstance();
+}
+
+void Logger::out(ELogLevel level, std::thread::id thread_id, int line, const char* function, const char* fmt, ...)
+{
+	if (level < mLogLevel)
+		return;
+
+	DateTime now = DateTime::now();
+	std::stringstream ss;
+	ss << thread_id;
+
+	std::string logstr;
+	va_list arg_ptr;
+	va_start(arg_ptr, fmt);
+	int size = vsnprintf(nullptr, 0, fmt, arg_ptr) + 1;
+	if (size > 1)
+	{
+		logstr.resize(size, '\0');
+		vsnprintf(&logstr[0], size, fmt, arg_ptr);
+		logstr.pop_back();
+	}
+	va_end(arg_ptr);
+
+	std::string message = Format::format("[%s] [%s] %s [%d] : %s\n", now.toString().c_str(), ss.str().c_str(), function, line, logstr.c_str());
+
+	{
+		std::lock_guard<std::mutex> lk(mSync);
+		mBuffer << message;
+	}
+}
+
+void Logger::write(const std::string& logs)
 {
 	try 
 	{
@@ -92,7 +124,7 @@ void ns_logger::Logger::write(const std::string& logs)
 	}
 }
 
-void ns_logger::Logger::flush()
+void Logger::flush()
 {
 	std::string logs;
 	const auto duration = std::chrono::milliseconds(mFlushDurationMilliSec);

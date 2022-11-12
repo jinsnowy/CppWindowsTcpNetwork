@@ -1,20 +1,13 @@
 #include "pch.h"
 #include "TcpSocket.h"
+#include "IoService.h"
 
-TcpSocket::TcpSocket()
+TcpSocket::TcpSocket(IoService& ioService)
 	:
-	mSocket(::WSASocket(PF_INET, SOCK_STREAM, 0, NULL, 0, WSA_FLAG_OVERLAPPED)),
-	mDisposed(false),
-	mConnected(false)
-{	
-}
-
-TcpSocket::TcpSocket(SOCKET socket)
-	:
-	mSocket(socket),
-	mDisposed(false),
-	mConnected(false)
+	_ioService(ioService),
+	_socket(NetUtils::CreateSocket())
 {
+	_ioService.registerHandle((HANDLE)_socket);
 }
 
 TcpSocket::~TcpSocket()
@@ -22,109 +15,94 @@ TcpSocket::~TcpSocket()
 	dispose("destructor");
 }
 
-void TcpSocket::setConnectInfo(const EndPoint& endPoint)
+bool TcpSocket::setLinger(SOCKET socket, uint16 onoff, uint16 linger)
 {
-	mEndPoint = endPoint;
-	setConnected(true);
+	return NetUtils::SetLinger(socket, onoff, linger);
 }
 
-bool TcpSocket::checkDisposed(const char* action)
+bool TcpSocket::setReuseAddress(SOCKET socket, bool flag)
 {
-	if (mDisposed == 1)
-	{
-		LOG_INFO("%s already disposed when %s, connect(%s)", toString().c_str(), action, get_bool_str(mConnected));
-		return true;
-	}
+	return NetUtils::SetReuseAddress(socket, flag);
+}
 
+bool TcpSocket::setRecvBufferSize(SOCKET sokcet, int32 size)
+{
+	return NetUtils::SetRecvBufferSize(sokcet, size);
+}
+
+bool TcpSocket::setSendBufferSize(SOCKET socket, int32 size)
+{
+	return NetUtils::SetSendBufferSize(socket, size);
+}
+
+bool TcpSocket::setTcpNoDelay(SOCKET socket, bool flag)
+{
+	return NetUtils::SetTcpNoDelay(socket, flag);
+}
+
+bool TcpSocket::setUpdateAcceptSocket(SOCKET socket, SOCKET listenSocket)
+{
+	return NetUtils::SetUpdateAcceptSocket(socket, listenSocket);
+}
+
+void TcpSocket::dispose(const char* reason)
+{
+	if (_disposed.exchange(true) == false)
+	{
+		LOG_INFO("disposed : %s", reason);
+
+		NetUtils::Close(_socket);
+	}
+}
+
+void TcpSocket::close(const char* reason)
+{
+	LOG_INFO("close : %s", reason);
+}
+
+void TcpSocket::setEndPoint(const EndPoint& endPoint)
+{
+	_endPoint = endPoint;
+}
+
+TcpAsyncSocket::TcpAsyncSocket(IoService& ioService)
+	:
+	TcpSocket(ioService)
+{
+}
+
+TcpConnetorSocket::TcpConnetorSocket(IoService& ioService)
+	:
+	TcpAsyncSocket(ioService)
+{
+}
+
+bool TcpConnetorSocket::connect(const EndPoint& endPoint)
+{
 	return false;
 }
 
-void TcpSocket::setLingerOption(bool enableLingerOption, unsigned short maxTimeWaitSeconds)
-{
-	LINGER lingerStruct = {};
-	lingerStruct.l_onoff = (enableLingerOption) ? 1 : 0;
-	lingerStruct.l_linger = maxTimeWaitSeconds;
-
-	if (check_sock_error(::setsockopt(mSocket, SOL_SOCKET, SO_LINGER, (char*)&lingerStruct, sizeof(lingerStruct))))
-	{
-		LOG_ERROR("%s failed to set linger option (%s), maxWaitTimeSec(%d)", toString().c_str(), get_bool_str(enableLingerOption), (int)maxTimeWaitSeconds);
-	}
-}
-
-void TcpSocket::setSendBufferingOption(int numBufferSize)
-{
-	if (numBufferSize <= 10)
-	{
-		LOG_ERROR("%s failed to set sendBuffering option too small : %d", numBufferSize);
-		return;
-	}
-
-	if (check_sock_error(::setsockopt(mSocket, SOL_SOCKET, SO_SNDBUF, (char*)&numBufferSize, sizeof(numBufferSize))))
-	{
-		LOG_ERROR("%s failed to set sendBuffering option : %d", numBufferSize);
-	}
-}
-
-void TcpSocket::close(const char* action)
-{
-	if (checkDisposed(action))
-		return;
-
-	bool expected = true;
-	if (mConnected.compare_exchange_strong(expected, false) == true)
-	{
-		LOG_INFO("closing by %s", action);
-
-		onClose();
-
-		if (check_sock_error(::shutdown(mSocket, SD_BOTH)))
-		{
-			LOG_ERROR("shutdown socket failed : %s", get_last_err_msg());
-		}
-	}
-}
-
-void TcpSocket::dispose(const char* action)
-{
-	if (checkDisposed(action))
-		return;
-
-	bool expected = false;
-	if (mDisposed.compare_exchange_strong(expected, true) == true)
-	{
-		onDisposed();
-
-		if (mConnected)
-		{
-			close(action);
-		}
-
-		if (check_sock_error(::closesocket(mSocket)))
-		{
-			LOG_ERROR("close socket failed : %s", get_last_err_msg());
-		}
-	}
-}
-
-void TcpSocket::onDisposed()
+void TcpConnetorSocket::disconnect()
 {
 }
 
-void TcpSocket::onClose()
+bool TcpConnetorSocket::reconnect(const EndPoint& endPoint)
+{
+	return false;
+}
+
+TcpListenerSocket::TcpListenerSocket(IoService& ioService)
+	:
+	TcpSocket(ioService)
 {
 }
 
-void TcpSocket::setNonblocking(bool bNonblock)
+bool TcpListenerSocket::bind(uint16 port)
 {
-	u_long mode = bNonblock ? 1 : 0;
-	if (check_sock_error(::ioctlsocket(mSocket, FIONBIO, &mode)))
-	{
-		LOG_FATAL("socket non blocking mode set %d failed %s", mode, toString().c_str());
-	}
+	return NetUtils::Bind(_socket, EndPoint("127.0.0.1", port));
 }
 
-void TcpSocket::setConnected(bool bConnect) noexcept
+bool TcpListenerSocket::listen(int32 backLog)
 {
-	mConnected.exchange(bConnect);
-	LOG_INFO("set to connect %s", get_bool_str(mConnected));
+	return NetUtils::Listen(_socket, backLog);
 }

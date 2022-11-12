@@ -185,25 +185,15 @@ call CopyGenerated.bat .\Generated\Generated*.h include\networkengine</Command>
     </Lib>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="AcceptorFactory.h" />
+    <ClInclude Include="IocpCore.h" />
+    <ClInclude Include="IoEvent.h" />
+    <ClInclude Include="IoService.h" />
+    <ClInclude Include="MemoryPool.h" />
+    <ClInclude Include="Stl.h" />
     <ClInclude Include="CorePch.h" />
+    <ClInclude Include="NetUtils.h" />
     <ClInclude Include="Xml.h" />
-    <ClInclude Include="ConnectorFactory.h" />
-    <ClInclude Include="DefaultPacketStruct.h" />
-    <ClInclude Include="DefaultPacketType.h" />
-    <ClInclude Include="IPacketFactory.h" />
     <ClInclude Include="Timer.h" />
-    <ClInclude Include="EventSelect.h" />
-    <ClInclude Include="IAcceptor.h" />
-    <ClInclude Include="IConnector.h" />
-    <ClInclude Include="IListener.h" />
-    <ClInclude Include="Iocp.h" />
-    <ClInclude Include="IoData.h" />
-    <ClInclude Include="IoDataBuffer.h" />
-    <ClInclude Include="ISender.h" />
-    <ClInclude Include="PacketHandler.h" />
-    <ClInclude Include="PacketManager.h" />
-    <ClInclude Include="Serializer.h" />
     <ClInclude Include="Common.h" />
     <ClInclude Include="DateTime.h" />
     <ClInclude Include="Define.h" />
@@ -211,44 +201,24 @@ call CopyGenerated.bat .\Generated\Generated*.h include\networkengine</Command>
     <ClInclude Include="Format.h" />
     <ClInclude Include="framework.h" />
     <ClInclude Include="Logger.h" />
-    <ClInclude Include="NetworkEngine.h" />
     <ClInclude Include="SehException.h" />
-    <ClInclude Include="NetworkObjectBase.h" />
-    <ClInclude Include="Packet.h" />
     <ClInclude Include="PathManager.h" />
     <ClInclude Include="pch.h" />
-    <ClInclude Include="Random.h" />
     <ClInclude Include="Singleton.h" />
-    <ClInclude Include="NetworkStream.h" />
     <ClInclude Include="Synchronization.h" />
-    <ClInclude Include="TcpAcceptorSocket.h" />
-    <ClInclude Include="TcpActiveSocket.h" />
-    <ClInclude Include="TcpConnector.h" />
-    <ClInclude Include="TcpConnectorSocket.h" />
-    <ClInclude Include="TcpListener.h" />
-    <ClInclude Include="TcpListenerSocket.h" />
     <ClInclude Include="TcpSocket.h" />
     <ClInclude Include="tinyxml2.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="AcceptorFactory.cpp" />
+    <ClCompile Include="DateTime.cpp" />
+    <ClCompile Include="IocpCore.cpp" />
+    <ClCompile Include="IoEvent.cpp" />
+    <ClCompile Include="IoService.cpp" />
+    <ClCompile Include="MemoryPool.cpp" />
+    <ClCompile Include="NetUtils.cpp" />
     <ClCompile Include="Xml.cpp" />
-    <ClCompile Include="ConnectorFactory.cpp" />
     <ClCompile Include="EndPoint.cpp" />
-    <ClCompile Include="EventSelect.cpp" />
-    <ClCompile Include="IAcceptor.cpp" />
-    <ClCompile Include="IConnector.cpp" />
-    <ClCompile Include="IListener.cpp">
-      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|x64'">pch.h</PrecompiledHeaderFile>
-    </ClCompile>
-    <ClCompile Include="Iocp.cpp" />
-    <ClCompile Include="IoDataBuffer.cpp" />
-    <ClCompile Include="IPacketFactory.cpp" />
-    <ClCompile Include="ISender.cpp" />
     <ClCompile Include="Logger.cpp" />
-    <ClCompile Include="NetworkEngine.cpp" />
-    <ClCompile Include="NetworkObjectBase.cpp" />
-    <ClCompile Include="Packet.cpp" />
     <ClCompile Include="PathManager.cpp" />
     <ClCompile Include="pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
@@ -256,13 +226,6 @@ call CopyGenerated.bat .\Generated\Generated*.h include\networkengine</Command>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="NetworkStream.cpp" />
-    <ClCompile Include="TcpAcceptorSocket.cpp" />
-    <ClCompile Include="TcpActiveSocket.cpp" />
-    <ClCompile Include="TcpConnector.cpp" />
-    <ClCompile Include="TcpConnectorSocket.cpp" />
-    <ClCompile Include="TcpListener.cpp" />
-    <ClCompile Include="TcpListenerSocket.cpp" />
     <ClCompile Include="TcpSocket.cpp" />
     <ClCompile Include="tinyxml2.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>

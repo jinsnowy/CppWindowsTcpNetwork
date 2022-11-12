@@ -11,5 +11,4 @@ protected:
 
 public:
 	virtual std::string toString() const { return ""; };
-	unsigned long long getId() const { return mId; }
 };
