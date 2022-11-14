@@ -4,6 +4,9 @@
 #include <TcpSocket.h>
 #include <MemoryPool.h>
 
+#include "ClientService.h"
+#include "ClientSession.h"
+
 using namespace std;
 
 int main(int argc, char** argv)
@@ -13,7 +16,12 @@ int main(int argc, char** argv)
     NetUtils::initialize();
     Logger::initialize();
     MemoryPool::initialize();
-
+   
+    SessionFactory sessionFactory = [](IoService& ios) { return make_shared<ClientSession>(ios); };
+    ClientServiceParam param(sessionFactory, 1, 1, "127.0.0.1", 12321);
+    ClientService service(param);
+    service.start();
+    service.run();
 
     return 0;
 }

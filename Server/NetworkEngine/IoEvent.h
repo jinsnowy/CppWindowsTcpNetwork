@@ -11,53 +11,56 @@ enum IoType
 	IO_ACCEPT,
 };
 
+static const char* getIoType(IoType type)
+{
+	switch (type)
+	{
+	case IO_READ:
+		return "IO_READ";
+	case IO_WRITE:
+		return "IO_WRITE";
+	case IO_CONNECT:
+		return "IO_CONNECT";
+	case IO_DISCONNECT:
+		return "IO_DISCONNECT";
+	case IO_ACCEPT:
+		return "IO_ACCEPT";
+	default:
+		return "?";
+	}
+}
+
 struct IoEvent : WSAOVERLAPPED
 {
 	IoType ioType;
 
-	IoEvent(IoType _ioType) : WSAOVERLAPPED{}, ioType(_ioType) { }
+	std::function<void(int32, DWORD)> task;
 
-	~IoEvent() { LOG_INFO("~IoEvent"); }
+	template<typename T>
+	IoEvent(IoType _ioType, T&& callback)
+		:
+		WSAOVERLAPPED{}, ioType(_ioType), task(std::forward<T>(callback)) 
+	{
+	}
 
-	virtual void operator()(int32 errorID, DWORD bytesTransferred) {}
+	~IoEvent() { /*LOG_INFO("~IoEvent %s", getIoType(ioType)); */ }
+
+	void operator()(int32 errorID, DWORD bytesTransferred) { task(errorID, bytesTransferred); }
 
 	void release() { pool_delete(this); }
 };
 
 template<typename T>
-struct IoEventWithTask : IoEvent
-{
-	T callback;
-
-	IoEventWithTask(IoType _ioType, T&& callback)
-		:
-		IoEvent(_ioType),
-		callback(std::forward<T>(callback))
-	{
-	}
-
-	~IoEventWithTask()
-	{
-		LOG_INFO("~IoEventWithTask");
-	}
-
-	virtual void operator()(int32 errorId, DWORD bytesTransferred)
-	{
-		callback(errorId, bytesTransferred);
-	}
-};
+IoEvent* makeWriteTask(T&& callback) { return pool_new<IoEvent>(IO_WRITE, std::forward<T>(callback)); }
 
 template<typename T>
-IoEvent* makeWriteTask(T&& callback) { return pool_new<IoEventWithTask<T>>(IO_WRITE, std::forward<T>(callback)); }
+IoEvent* makeReadTask(T&& callback) { return pool_new<IoEvent>(IO_READ, std::forward<T>(callback)); }
 
 template<typename T>
-IoEvent* makeReadTask(T&& callback) { return pool_new<IoEventWithTask<T>>(IO_READ, std::forward<T>(callback)); }
+IoEvent* makeConnectTask(T&& callback) { return pool_new<IoEvent>(IO_CONNECT, std::forward<T>(callback)); }
 
 template<typename T>
-IoEvent* makeConnectTask(T&& callback) { return pool_new<IoEventWithTask<T>>(IO_CONNECT, std::forward<T>(callback)); }
+IoEvent* makeDisconnectTask(T&& callback) { return pool_new<IoEvent>(IO_DISCONNECT, std::forward<T>(callback)); }
 
 template<typename T>
-IoEvent* makeDisconnectTask(T&& callback) { return pool_new<IoEventWithTask<T>>(IO_DISCONNECT, std::forward<T>(callback)); }
-
-template<typename T>
-IoEvent* makeAcceptTask(T&& callback) { return pool_new<IoEventWithTask<T>>(IO_ACCEPT, std::forward<T>(callback)); }
+IoEvent* makeAcceptTask(T&& callback) { return pool_new<IoEvent>(IO_ACCEPT, std::forward<T>(callback)); }

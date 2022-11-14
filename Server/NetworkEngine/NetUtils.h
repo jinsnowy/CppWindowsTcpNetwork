@@ -24,7 +24,9 @@ public:
 
 	static bool Bind(SOCKET socket, EndPoint netAddr);
 	static bool BindAnyAddress(SOCKET socket, uint16 port);
+	static bool GetEndPoint(SOCKET socket, EndPoint& endPoint);
 	static bool Listen(SOCKET socket, int32 backLog = SOMAXCONN);
+	static void Shutdown(SOCKET socket, int32 how);
 	static void Close(SOCKET socket);
 
 	static bool ConnectAsync(SOCKET socket, LPWSAOVERLAPPED overlapped, const EndPoint& endPoint);

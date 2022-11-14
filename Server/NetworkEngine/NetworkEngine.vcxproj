@@ -185,10 +185,20 @@ call CopyGenerated.bat .\Generated\Generated*.h include\networkengine</Command>
     </Lib>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="ClientService.h" />
+    <ClInclude Include="ClientSession.h" />
     <ClInclude Include="IocpCore.h" />
     <ClInclude Include="IoEvent.h" />
     <ClInclude Include="IoService.h" />
+    <ClInclude Include="Listener.h" />
     <ClInclude Include="MemoryPool.h" />
+    <ClInclude Include="RecvBuffer.h" />
+    <ClInclude Include="ServerService.h" />
+    <ClInclude Include="ServerSession.h" />
+    <ClInclude Include="Session.h" />
+    <ClInclude Include="BufferSource.h" />
+    <ClInclude Include="SessionManager.h" />
+    <ClInclude Include="StdLock.h" />
     <ClInclude Include="Stl.h" />
     <ClInclude Include="CorePch.h" />
     <ClInclude Include="NetUtils.h" />
@@ -210,12 +220,22 @@ call CopyGenerated.bat .\Generated\Generated*.h include\networkengine</Command>
     <ClInclude Include="tinyxml2.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="ClientService.cpp" />
+    <ClCompile Include="ClientSession.cpp" />
     <ClCompile Include="DateTime.cpp" />
     <ClCompile Include="IocpCore.cpp" />
     <ClCompile Include="IoEvent.cpp" />
     <ClCompile Include="IoService.cpp" />
+    <ClCompile Include="Listener.cpp" />
     <ClCompile Include="MemoryPool.cpp" />
     <ClCompile Include="NetUtils.cpp" />
+    <ClCompile Include="RecvBuffer.cpp" />
+    <ClCompile Include="ServerService.cpp" />
+    <ClCompile Include="ServerSession.cpp" />
+    <ClCompile Include="Session.cpp" />
+    <ClCompile Include="BufferSource.cpp" />
+    <ClCompile Include="SessionManager.cpp" />
+    <ClCompile Include="StdLock.cpp" />
     <ClCompile Include="Xml.cpp" />
     <ClCompile Include="EndPoint.cpp" />
     <ClCompile Include="Logger.cpp" />
@@ -238,7 +258,6 @@ call CopyGenerated.bat .\Generated\Generated*.h include\networkengine</Command>
   <ItemGroup>
     <None Include="..\..\.gitignore" />
     <None Include="..\..\CopyGenerated.bat" />
-    <None Include="..\..\CopyHeader.bat" />
     <None Include="..\..\README.md" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

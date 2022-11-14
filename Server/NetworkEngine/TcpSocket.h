@@ -4,9 +4,9 @@ class IoService;
 class TcpSocket
 {
 	friend class IoService;
+	friend class TcpListenerSocket;
 protected:
 	SOCKET	   _socket;
-	EndPoint   _endPoint;
 
 private:
 	IoService& _ioService;
@@ -14,24 +14,19 @@ private:
 
 public:
 	TcpSocket(IoService& ioService);
-
-	EndPoint getEndPoint() { return _endPoint; }
+	
+	SOCKET   getSocket() { return _socket; }
 
 	virtual ~TcpSocket();
 
-	bool setLinger(SOCKET socket, uint16 onoff, uint16 linger);
-	bool setReuseAddress(SOCKET socket, bool flag);
-	bool setRecvBufferSize(SOCKET sokcet, int32 size);
-	bool setSendBufferSize(SOCKET socket, int32 size);
-	bool setTcpNoDelay(SOCKET socket, bool flag);
-	bool setUpdateAcceptSocket(SOCKET socket, SOCKET listenSocket);
+	bool setLinger(uint16 onoff, uint16 linger);
+	bool setReuseAddress(bool flag);
+	bool setRecvBufferSize(int32 size);
+	bool setSendBufferSize(int32 size);
+	bool setTcpNoDelay(bool flag);
 
 	void dispose(const char* reason);
-
-protected:
 	void close(const char* reason);
-
-	void setEndPoint(const EndPoint& endPoint);
 };
 
 class TcpAsyncSocket : public TcpSocket
@@ -69,7 +64,7 @@ public:
 	}
 
 	template<typename AsyncIoCompleteRoutine>
-	bool read_async(char* buffer, size_t len, AsyncIoCompleteRoutine&& callback)
+	bool read_async(char* buffer, ULONG len, AsyncIoCompleteRoutine&& callback)
 	{
 		IoEvent* ioEvent = makeReadTask(std::forward<AsyncIoCompleteRoutine>(callback));
 
@@ -82,6 +77,7 @@ public:
 
 		return true;
 	}
+
 
 	template<typename AsyncIoCompleteRoutine>
 	bool connect_async(const EndPoint& endPoint, AsyncIoCompleteRoutine&& callback)
@@ -114,29 +110,30 @@ public:
 	}
 };
 
-class TcpConnetorSocket : public TcpAsyncSocket
+class TcpActiveSocket : public TcpAsyncSocket
 {
 public:
-	TcpConnetorSocket(IoService& ioService);
-
-	bool connect(const EndPoint& endPoint);
-
-	void disconnect();
-
-	bool reconnect(const EndPoint& endPoint);
+	TcpActiveSocket(IoService& ioService);
 };
 
 class TcpListenerSocket : public TcpSocket
 {
+private:
+	EndPoint _bindEndPoint;
+
 public:
 	TcpListenerSocket(IoService& ioService);
+
+	EndPoint getAddress() { return _bindEndPoint; }
 
 	bool bind(uint16 port);
 
 	bool listen(int32 backLog = SOMAXCONN);
 
+	bool setUpdateAcceptSocket(SOCKET acceptSocket);
+
 	template<typename OnAcceptCallback>
-	bool accept_async(SOCKET acceptSocket, LPVOID* recvBuf, OnAcceptCallback&& onAccept)
+	bool accept_async(SOCKET acceptSocket, LPVOID recvBuf, OnAcceptCallback&& onAccept)
 	{
 		IoEvent* ioEvent = makeAcceptTask(std::forward<OnAcceptCallback>(onAccept));
 
@@ -149,4 +146,6 @@ public:
 
 		return true;
 	}
+
+	IoService& ioService() { return TcpSocket::_ioService; }
 };

@@ -1,16 +1,22 @@
 #pragma once
 #include "IocpCore.h"
+#include "Session.h"
 
 class IoService : protected IocpCore
 {
 	friend class TcpSocket;
 public:
-	IoService();
+	IoService(int threadWorkerNum);
 
 	~IoService();
 
-	void start();
+	virtual void start();
 
-	void stop();
+	virtual void stop();
+
+	virtual void run();
+
+private:
+	int _threadNum;
+	vector<thread> _ioWorkers;
 };
-

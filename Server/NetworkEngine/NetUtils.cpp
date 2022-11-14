@@ -91,9 +91,21 @@ bool NetUtils::BindAnyAddress(SOCKET socket, uint16 port)
 	return SOCKET_ERROR != ::bind(socket, reinterpret_cast<const SOCKADDR*>(&myAddress), sizeof(myAddress));
 }
 
+bool NetUtils::GetEndPoint(SOCKET socket, EndPoint& endPoint)
+{
+	int32 sizeOfSockAddress = sizeof(SOCKADDR);
+	return SOCKET_ERROR != ::getpeername(socket, endPoint.getSockAddr(), &sizeOfSockAddress);
+}
+
 bool NetUtils::Listen(SOCKET socket, int32 backLog)
 {
 	return SOCKET_ERROR != ::listen(socket, backLog);
+}
+
+void NetUtils::Shutdown(SOCKET socket, int32 how)
+{
+	if (socket != INVALID_SOCKET)
+		::shutdown(socket, how);
 }
 
 void NetUtils::Close(SOCKET socket)
@@ -109,6 +121,13 @@ bool NetUtils::ConnectAsync(SOCKET socket, LPWSAOVERLAPPED overlapped, const End
 	DWORD dwSentBytes = 0;
 	if (!ConnectEx(socket, endPoint.getSockAddr(), sizeof(SOCKADDR), NULL, 0, &dwSentBytes, overlapped))
 	{
+		int32 errorCode = ::WSAGetLastError();
+
+		if (errorCode != WSA_IO_PENDING)
+		{
+			string msg = get_last_err_msg();
+		}
+
 		return was_io_pending();
 	}
 
@@ -139,7 +158,10 @@ bool NetUtils::AcceptAsync(SOCKET listenSocket, SOCKET acceptSocket, LPVOID recv
 bool NetUtils::WriteAsync(SOCKET socket, LPWSAOVERLAPPED overlapped, CHAR* buf, ULONG len)
 {
 	DWORD dwSentBytes = 0;
-	WSABUF wsaBuf{len,buf};
+	WSABUF wsaBuf;
+	wsaBuf.buf = buf;
+	wsaBuf.len = len;
+
 	if (check_sock_error(::WSASend(socket, &wsaBuf, 1, &dwSentBytes, 0, overlapped, NULL)))
 	{
 		return was_io_pending();
@@ -163,7 +185,9 @@ bool NetUtils::ReadAsync(SOCKET socket, LPWSAOVERLAPPED overlapped, CHAR* buf, U
 {
 	DWORD dwFlags = 0;
 	DWORD dwRecvBytes = 0;
-	WSABUF wsaBuf{ len,buf };
+	WSABUF wsaBuf;
+	wsaBuf.buf = buf;
+	wsaBuf.len = len;
 	if (check_sock_error(::WSARecv(socket, &wsaBuf, 1, &dwRecvBytes, &dwFlags, overlapped, NULL)))
 	{
 		return was_io_pending();

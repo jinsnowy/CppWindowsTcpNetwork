@@ -6,4 +6,5 @@
 #include "Logger.h"
 #include "EndPoint.h"
 #include "NetUtils.h"
-#include "NetworkObjectBase.h"
+#include "StdLock.h"
+#include "BufferSource.h"

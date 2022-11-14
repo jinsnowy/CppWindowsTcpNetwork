@@ -15,34 +15,29 @@ TcpSocket::~TcpSocket()
 	dispose("destructor");
 }
 
-bool TcpSocket::setLinger(SOCKET socket, uint16 onoff, uint16 linger)
+bool TcpSocket::setLinger(uint16 onoff, uint16 linger)
 {
-	return NetUtils::SetLinger(socket, onoff, linger);
+	return NetUtils::SetLinger(_socket, onoff, linger);
 }
 
-bool TcpSocket::setReuseAddress(SOCKET socket, bool flag)
+bool TcpSocket::setReuseAddress(bool flag)
 {
-	return NetUtils::SetReuseAddress(socket, flag);
+	return NetUtils::SetReuseAddress(_socket, flag);
 }
 
-bool TcpSocket::setRecvBufferSize(SOCKET sokcet, int32 size)
+bool TcpSocket::setRecvBufferSize(int32 size)
 {
-	return NetUtils::SetRecvBufferSize(sokcet, size);
+	return NetUtils::SetRecvBufferSize(_socket, size);
 }
 
-bool TcpSocket::setSendBufferSize(SOCKET socket, int32 size)
+bool TcpSocket::setSendBufferSize(int32 size)
 {
-	return NetUtils::SetSendBufferSize(socket, size);
+	return NetUtils::SetSendBufferSize(_socket, size);
 }
 
-bool TcpSocket::setTcpNoDelay(SOCKET socket, bool flag)
+bool TcpSocket::setTcpNoDelay(bool flag)
 {
-	return NetUtils::SetTcpNoDelay(socket, flag);
-}
-
-bool TcpSocket::setUpdateAcceptSocket(SOCKET socket, SOCKET listenSocket)
-{
-	return NetUtils::SetUpdateAcceptSocket(socket, listenSocket);
+	return NetUtils::SetTcpNoDelay(_socket, flag);
 }
 
 void TcpSocket::dispose(const char* reason)
@@ -58,11 +53,8 @@ void TcpSocket::dispose(const char* reason)
 void TcpSocket::close(const char* reason)
 {
 	LOG_INFO("close : %s", reason);
-}
 
-void TcpSocket::setEndPoint(const EndPoint& endPoint)
-{
-	_endPoint = endPoint;
+	NetUtils::Shutdown(_socket, SD_BOTH);
 }
 
 TcpAsyncSocket::TcpAsyncSocket(IoService& ioService)
@@ -71,24 +63,10 @@ TcpAsyncSocket::TcpAsyncSocket(IoService& ioService)
 {
 }
 
-TcpConnetorSocket::TcpConnetorSocket(IoService& ioService)
+TcpActiveSocket::TcpActiveSocket(IoService& ioService)
 	:
 	TcpAsyncSocket(ioService)
 {
-}
-
-bool TcpConnetorSocket::connect(const EndPoint& endPoint)
-{
-	return false;
-}
-
-void TcpConnetorSocket::disconnect()
-{
-}
-
-bool TcpConnetorSocket::reconnect(const EndPoint& endPoint)
-{
-	return false;
 }
 
 TcpListenerSocket::TcpListenerSocket(IoService& ioService)
@@ -99,10 +77,16 @@ TcpListenerSocket::TcpListenerSocket(IoService& ioService)
 
 bool TcpListenerSocket::bind(uint16 port)
 {
-	return NetUtils::Bind(_socket, EndPoint("127.0.0.1", port));
+	_bindEndPoint = EndPoint("127.0.0.1", port);
+	return NetUtils::Bind(_socket, _bindEndPoint);
 }
 
 bool TcpListenerSocket::listen(int32 backLog)
 {
 	return NetUtils::Listen(_socket, backLog);
+}
+
+bool TcpListenerSocket::setUpdateAcceptSocket(SOCKET acceptSocket)
+{
+	return NetUtils::SetUpdateAcceptSocket(acceptSocket, _socket);
 }

@@ -12,6 +12,10 @@ typedef short int16;
 typedef int int32;
 typedef long long int64;
 
+using SessionPtr = std::shared_ptr<class Session>;
+using SessionFactory = std::function<SessionPtr(class IoService&)>;
+using OnAcceptFunc = std::function<bool(SessionPtr)>;
+
 static const char* get_bool_str(const bool& v) { return v ? "true" : "false"; }
 // check socket call
 

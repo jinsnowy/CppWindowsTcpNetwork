@@ -4,6 +4,7 @@ class IoObject;
 class IocpCore
 {
 private:
+	atomic<bool> _disposed;
 	HANDLE _iocpHandle;
 
 public:
@@ -13,5 +14,9 @@ public:
 	void registerHandle(HANDLE handle);
 
 	void dispatch();
+
+	void dispose();
+
+	bool isFinished() { return _disposed; }
 };
 
