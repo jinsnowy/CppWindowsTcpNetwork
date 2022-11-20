@@ -1,362 +1,100 @@
 #include "pch.h"
 #include "Session.h"
 #include "SessionManager.h"
+#include "TcpNetwork.h"
 
-struct on_recv_t
-{
-	std::shared_ptr<Session> sessionPtr;
-
-	on_recv_t(std::shared_ptr<Session> session) : sessionPtr(session) {}
-
-	void operator()(int32 errorCode, DWORD recvBytes)
-	{
-		if (recvBytes == 0)
-		{
-			sessionPtr->disconnectOnError("recv 0");
-			return;
-		}
-
-		if (errorCode != 0)
-		{
-			sessionPtr->handleError(errorCode);
-			return;
-		}
-
-		sessionPtr->recv(recvBytes);
-		sessionPtr->registerRecv();
-	}
-};
-
-struct on_send_t
-{
-	std::shared_ptr<Session> sessionPtr;
-	std::vector<BufferSegment> segmentHolder;
-
-	on_send_t(std::shared_ptr<Session> session, std::vector<BufferSegment>&& segments)
-		: 
-		sessionPtr(session),
-		segmentHolder(segments)
-	{}
-
-	void operator()(int32 errorCode, DWORD writeBytes)
-	{
-		sessionPtr->_sendIsPending.store(false);
-
-		if (writeBytes == 0)
-		{
-			sessionPtr->disconnectOnError("write 0");
-			return;
-		}
-
-		if (errorCode != 0)
-		{
-			sessionPtr->handleError(errorCode);
-			return;
-		}
-
-		sessionPtr->flush();
-	}
-};
-
-struct on_connect_t
-{
-	std::shared_ptr<Session> sessionPtr;
-	EndPoint endPoint;
-
-	on_connect_t(std::shared_ptr<Session> _session, EndPoint _endPoint) 
-		: sessionPtr(_session), endPoint(_endPoint) {}
-
-	void operator()(int32 errorCode, DWORD)
-	{
-		if (errorCode != 0)
-		{
-			LOG_ERROR("connect error : %s", get_last_err_msg());
-			return;
-		}
-
-		sessionPtr->setEndPoint(endPoint);
-		sessionPtr->setConnected();
-	}
-};
-
-struct on_disconnect_t
-{
-	std::shared_ptr<Session> sessionPtr;
-
-	on_disconnect_t(std::shared_ptr<Session> _session)
-		: sessionPtr(_session) {}
-
-	void operator()(int32 errorCode, DWORD)
-	{
-		if (errorCode != 0)
-		{
-			LOG_ERROR("disconnect error : %s", get_last_err_msg());
-		}
-
-		sessionPtr->setDisconnected();
-	}
-};
-
-Session::Session(IoService& ioService)
+Session::Session()
 	:
-	_socket(ioService),
-	_connected(false),
-	_recvBuffer{}
+	_sessionId(INVALID_SESSION_VALUE)
 {
 }
 
 Session::~Session()
 {
-	_socket.dispose("session destructor");
+	LOG_INFO("~Session()");
 }
 
-void Session::sendAsync(const BufferSegment& segment)
+void Session::SendAsync(const BufferSegment& segment)
 {
-	if (isConnected() == false)
+	if (IsConnected() == false || segment.len == 0)
 		return;
 
-	{
-		StdWriteLock lock(_sync);
-
-		_pendingSegment.push_back(segment);
-	}
-
-	if (_sendIsPending.exchange(true) == false)
-	{
-		flush();
-	}
+	_network->SendAsync(segment);
 }
 
-void Session::setDisconnected()
+bool Session::onRecv(const PacketHeader& header, CHAR* dataStartPtr)
 {
-	static SessionManager* sessionManager = SessionManager::getInstance();
-
-	if (_connected.exchange(false) == true)
-	{
-		sessionManager->removeSession(shared_from_this());
-
-		onDisconnected();
-	}
+	return true;
 }
 
-void Session::setConnected()
+void Session::attachNetwork(shared_ptr<TcpNetwork> network)
 {
-	static SessionManager* sessionManager = SessionManager::getInstance();
-
-	if (_connected.exchange(true) == false)
+	if (_network != nullptr && _network->IsConnected())
 	{
-		LOG_INFO("start recv");
-		
-		registerRecv();
+		_network->DisconnectAsync();
+		_network = nullptr;
+	}
 
-		sessionManager->addSession(shared_from_this());
+	_network = network;
 
+	if (_network->IsConnected())
+	{
 		onConnected();
 	}
 }
 
-void Session::handleError(int32 errorCode)
+void Session::detachNetwork()
 {
-	switch (errorCode)
+	if (IsConnected())
 	{
-	case WSAECONNRESET:
-	case WSAECONNABORTED:
-		disconnectOnError("connection reset");
-		break;
-	default:
-		LOG_ERROR("handle error %s", get_last_err_msg_code(errorCode));
-		break;
+		onDisconnected();
 	}
+
+	_network = nullptr;
 }
 
 void Session::recv(DWORD recvBytes)
 {
-	if (!_recvBuffer.checkWrite(recvBytes))
-	{
-		disconnectOnError("recv buffer overflows");
-		return;
-	}
-
-	if (_recvBuffer.isReadable(recvBytes))
-	{
-		onRecv(recvBytes);
-
-		_recvBuffer.read(recvBytes);
-	}
-
-	_recvBuffer.rotate();
 }
 
-void Session::disconnect()
+bool Session::IsConnected()
 {
-	if (!isConnected())
+	return _network != nullptr && _network->IsConnected();
+}
+
+void Session::Disconnect()
+{
+	if (_network == nullptr || _network->IsConnected() == false)
 		return;
-	
-	if (!_socket.disconnect_async(on_disconnect_t(shared_from_this())))
-	{
-		LOG_ERROR("disconnect failed : %s", get_last_err_msg());
-		return;
-	}
+
+	_network->DisconnectAsync();
 
 	int count = 0;
-	while (isConnected() && ++count < 10)
+	while (IsConnected() && ++count < 10)
 	{
 		std::this_thread::sleep_for(100ms);
 	}
 }
 
-bool Session::connect(const char* address, uint16 port)
+void Session::DisconnectAsync()
 {
-	return connect(EndPoint(address, port));
-}
+	if (_network == nullptr || _network->IsConnected() == false)
+		return;
 
-bool Session::connect(const EndPoint& endPoint)
-{
-	if(isConnected())
-	{
-		LOG_INFO("already connected");
-		return true;
-	}
-
-	if (NetUtils::SetReuseAddress(_socket.getSocket(), true) == false)
-		return false;
-
-	if (NetUtils::BindAnyAddress(_socket.getSocket(), 0) == false)
-		return false;
-
-	if (!_socket.connect_async(endPoint, on_connect_t(shared_from_this(), endPoint)))
-	{
-		LOG_ERROR("connect failed to %s, %s", endPoint.toString().c_str(), get_last_err_msg());
-		return false;
-	}
-
-	int count = 0;
-	while (!isConnected() && ++count < 10)
-	{
-		std::this_thread::sleep_for(200ms);
-	}
-
-	return isConnected(); false;
-}
-
-bool Session::reconnect(const EndPoint& endPoint)
-{
-	if (isConnected())
-	{
-		disconnect();
-	}
-
-	LOG_INFO("reconnect ...");
-
-	return connect(endPoint);
-}
-
-bool Session::connectAsync(const EndPoint& endPoint)
-{
-	if (isConnected())
-	{
-		LOG_INFO("already connected");
-		return true;
-	}
-
-	if (NetUtils::SetReuseAddress(_socket.getSocket(), true) == false)
-		return false;
-
-	if (NetUtils::BindAnyAddress(_socket.getSocket(), 0) == false)
-		return false;
-
-	if (!_socket.connect_async(endPoint, on_connect_t(shared_from_this(), endPoint)))
-	{
-		LOG_ERROR("connect failed to %s, %s", endPoint.toString().c_str(), get_last_err_msg());
-		return false;
-	}
-
-	return true;
-}
-
-bool Session::reconnectAsync(const EndPoint& endPoint)
-{
-	if (isConnected())
-	{
-		disconnect();
-	}
-
-	LOG_INFO("reconnect ...");
-
-	return connectAsync(endPoint);
+	_network->DisconnectAsync();
 }
 
 void Session::onConnected()
 {
-	LOG_INFO("connected to %s", getEndPointDesc().c_str());
+	LOG_INFO("connected to %s", GetEndPointDesc().c_str());
 }
 
 void Session::onDisconnected()
 {
-	LOG_INFO("disconnected from %s", getEndPointDesc().c_str());
+	LOG_INFO("disconnected from %s", GetEndPointDesc().c_str());
 }
 
-void Session::onRecv(DWORD recvBytes)
+EndPoint Session::GetEndPoint()
 {
-	LOG_INFO("%s", _recvBuffer.getBufferPtrRead());
-}
-
-void Session::flush()
-{
-	if (flushInternal() == false)
-	{
-		int32 errCode = ::WSAGetLastError();
-
-		handleError(errCode);
-	}
-}
-
-bool Session::flushInternal()
-{
-	std::vector<WSABUF> buffers;
-	std::vector<BufferSegment> segments;
-
-	{
-		StdWriteLock lock(_sync);
-
-		int32 bufferNum = (int32)_pendingSegment.size();
-		if (bufferNum == 0)
-			return true;
-
-		buffers.resize(bufferNum);
-		for (int32 i = 0; i < bufferNum; ++i)
-		{
-			buffers[i] = _pendingSegment[i].wsaBuf();
-		}
-
-		segments = std::move(_pendingSegment);
-	}
-	
-	LOG_INFO("send %d buffers", (int)buffers.size());
-
-	return _socket.write_async(buffers, on_send_t(shared_from_this(), std::move(segments)));
-}
-
-void Session::registerRecv()
-{
-	if (!isConnected())
-		return;
-
-	if (!_socket.read_async(_recvBuffer.getBufferPtr(), _recvBuffer.getLen(), on_recv_t(shared_from_this())))
-	{
-		int32 errCode = ::WSAGetLastError();
-		
-		handleError(errCode);
-	}
-}
-
-void Session::disconnectOnError(const char* reason)
-{
-	if (!isConnected())
-		return;
-
-	if (!_socket.disconnect_async(on_disconnect_t(shared_from_this())))
-	{
-		LOG_ERROR("disconnect failed on %s : %s", reason, get_last_err_msg());
-	}
+	return _network != nullptr ? _network->GetEndPoint() : EndPoint();
 }

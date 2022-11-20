@@ -15,5 +15,5 @@ public:
 
 private:
 	StdLock _sync;
-	std::set<shared_ptr<Session>> _sessionContainer;
+	std::map<SessionID, shared_ptr<Session>> _sessionContainer;
 };

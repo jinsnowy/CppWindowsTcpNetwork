@@ -3,28 +3,30 @@
 
 struct ClientServiceParam
 {
-	SessionFactory sessionFactory;
 	const char* address;
 	uint16 port;
 	int clientNum;
 	int workerNum;
 
-	ClientServiceParam(SessionFactory _sessionFactory, int _clientNum, int _workerNum, const char* _address, uint16 _port)
+	ClientServiceParam(int _clientNum, int _workerNum, const char* _address, uint16 _port)
 		:
-		sessionFactory(_sessionFactory), clientNum(_clientNum), workerNum(_workerNum),
+		clientNum(_clientNum), workerNum(_workerNum),
 		address(_address), port(_port)
 	{}
 };
 
+class ClientSession;
 class ClientService : public IoService
 {
 private:
 	int _clientNum;
-	SessionFactory _sessionFactory;
 	EndPoint _endPoint;
+	vector<shared_ptr<ClientSession>> _clients;
 
 public:
 	ClientService(const ClientServiceParam& param);
 
-	virtual void start() override;
+	virtual void Start() override;
+
+	virtual void Run() override;
 };

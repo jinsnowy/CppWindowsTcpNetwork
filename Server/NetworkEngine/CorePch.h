@@ -21,6 +21,7 @@
 #include <sstream>
 #include <type_traits>
 #include <chrono>
+#include <random>
 
 #include "Stl.h"
 
@@ -40,6 +41,12 @@ using namespace std;
 #include "MemoryPool.h"
 
 #pragma comment(lib, "ws2_32.lib")
+
+#ifdef _DEBUG
+#pragma comment(lib, "libprotobufd.lib")
+#else
+#pragma comment(lib, "libprotobuf.lib")
+#endif
 
 #define GETSET(field, type)\
 type get##field() const { return field;}\

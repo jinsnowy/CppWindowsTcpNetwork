@@ -1,15 +1,15 @@
 #pragma once
 
 class IoObject;
-class IocpCore
+class IoContext
 {
 private:
 	atomic<bool> _disposed;
 	HANDLE _iocpHandle;
 
 public:
-	IocpCore();
-	~IocpCore();
+	IoContext();
+	~IoContext();
 
 	void registerHandle(HANDLE handle);
 

@@ -4,9 +4,6 @@
     <Filter Include="main">
       <UniqueIdentifier>{e85987d0-4e77-408c-a686-441e4020b8bd}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Generated">
-      <UniqueIdentifier>{a4ffb3c6-af06-4bab-9af5-5c8fa56a83f3}</UniqueIdentifier>
-    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Program.cpp">
@@ -16,14 +13,5 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h" />
-    <ClInclude Include="..\..\Generated\GeneratedPacketFactory.h">
-      <Filter>Generated</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Generated\GeneratedPacketStruct.h">
-      <Filter>Generated</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Generated\GeneratedPacketType.h">
-      <Filter>Generated</Filter>
-    </ClInclude>
   </ItemGroup>
 </Project>

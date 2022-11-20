@@ -11,14 +11,29 @@ typedef char int8;
 typedef short int16;
 typedef int int32;
 typedef long long int64;
+typedef uint64 SessionID;
+
+using CondVar = std::condition_variable;
+using Thread = std::thread;
+using Mutex = std::mutex;
+using UniqueLock = std::unique_lock<std::mutex>;
+using LockGuard = std::lock_guard<std::mutex>;
 
 using SessionPtr = std::shared_ptr<class Session>;
-using SessionFactory = std::function<SessionPtr(class IoService&)>;
-using OnAcceptFunc = std::function<bool(SessionPtr)>;
+using SessionWeakPtr = std::weak_ptr<class Session>;
+using SessionPtrCRef = const SessionPtr&;
+using NetworkPtr = std::shared_ptr<class TcpNetwork>;
+using NetworkPtrCRef = const std::shared_ptr<class TcpNetwork>&;
+using SessionFactory = std::function<SessionPtr()>;
+using NetworkFactory = std::function<NetworkPtr(class IoService&)>;
+using OnAcceptFunc = std::function<bool(NetworkPtr)>;
+using PacketHandlerFunc = std::function<void(SessionPtr)>;
+using HandshakePtr = std::unique_ptr<class Handshake>;
 
 static const char* get_bool_str(const bool& v) { return v ? "true" : "false"; }
 // check socket call
 
+#define INVALID_SESSION_VALUE 0
 #define check_sock_error(exp) ((exp) == SOCKET_ERROR)
 #define was_io_pending() ((::WSAGetLastError() == WSA_IO_PENDING))
 #define would_block(err) ((::WSAGetLastError() == WSAEWOULDBLOCK))

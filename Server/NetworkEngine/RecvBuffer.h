@@ -14,10 +14,12 @@ public:
 
 	CHAR* getBufferPtrRead() { return &_buffer[_readPos]; }
 	
+	void clear();
 	void rotate();
-	bool checkWrite(int32 writeBytes);
+	bool onDataRecv(int32 recvBytes);
 	void read(int32 readBytes);
 	bool isReadable(int32 bytes) { return _writePos - _readPos >= bytes; }
+	bool isHeaderReadable() { return _writePos - _readPos >= sizeof(PacketHeader); }
 private:
 	bool isFree(int32 bytes) { return BUFFER_SIZE - _writePos >= bytes; }
 

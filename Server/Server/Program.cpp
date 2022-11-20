@@ -5,15 +5,6 @@
 
 using namespace std;
 
-StdLock mtx;
-vector<SessionPtr> sessions;
-
-void addSession(SessionPtr session)
-{
-    StdWriteLock lk(mtx);
-    sessions.push_back(std::move(session));
-}
-
 int main(int argc, char ** argv)
 {
     _CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
@@ -22,12 +13,10 @@ int main(int argc, char ** argv)
     Logger::initialize();
     MemoryPool::initialize();
 
-    SessionFactory sessionFactory = [](IoService& ioService) { return make_shared<ServerSession>(ioService); };
-    OnAcceptFunc onAccept = [](SessionPtr) { return true; };
-    ServerServiceParam param(sessionFactory, onAccept, 12321, 10);
+    ServerServiceParam param(12321, 10);
     ServerService service(param);
-    service.start();
-    service.run();
+    service.Start();
+    service.Run();
 
     return 0;
 }

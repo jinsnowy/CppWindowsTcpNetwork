@@ -1,0 +1,13 @@
+syntax = "proto3";
+package UserProtocol;
+
+message HEARTBEAT
+{
+	uint64 sessionId = 1;
+	int64 time = 2;
+}
+
+message TEST
+{
+	string text = 1;
+}

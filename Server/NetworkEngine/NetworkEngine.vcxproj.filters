@@ -37,9 +37,26 @@
     <Filter Include="SessionManager">
       <UniqueIdentifier>{ca2e1954-ebde-4968-a8fa-03f6e5c2755a}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Protocol">
+      <UniqueIdentifier>{17a1d0b4-5354-455b-ab91-6c5679ce794b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Packet">
+      <UniqueIdentifier>{8d1982bc-3e8e-4ac7-be0a-cd2ae4dba8cc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Handshake">
+      <UniqueIdentifier>{9cc988ce-fc22-4e3d-afc9-e14e691bc4f5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Network">
+      <UniqueIdentifier>{33b36a94-5cba-4d39-8458-ef511143c43e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Protocol\Handshake">
+      <UniqueIdentifier>{1fd2caf6-b755-4192-8be1-3a44696f41cf}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Protocol\UserPacket">
+      <UniqueIdentifier>{57a8ff0d-542e-4187-b70b-047898a6f588}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="framework.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="Define.h">
       <Filter>Header</Filter>
@@ -92,7 +109,7 @@
     <ClInclude Include="Stl.h">
       <Filter>Main</Filter>
     </ClInclude>
-    <ClInclude Include="IocpCore.h">
+    <ClInclude Include="IoContext.h">
       <Filter>IoEvent</Filter>
     </ClInclude>
     <ClInclude Include="IoEvent.h">
@@ -134,6 +151,48 @@
     <ClInclude Include="ServerService.h">
       <Filter>IoService</Filter>
     </ClInclude>
+    <ClInclude Include="LoginSession.h">
+      <Filter>Session</Filter>
+    </ClInclude>
+    <ClInclude Include="PacketException.h">
+      <Filter>Packet</Filter>
+    </ClInclude>
+    <ClInclude Include="PacketHeader.h">
+      <Filter>Packet</Filter>
+    </ClInclude>
+    <ClInclude Include="Handshake.h">
+      <Filter>Handshake</Filter>
+    </ClInclude>
+    <ClInclude Include="TcpNetwork.h">
+      <Filter>Network</Filter>
+    </ClInclude>
+    <ClInclude Include="framework.h">
+      <Filter>Utility</Filter>
+    </ClInclude>
+    <ClInclude Include="PacketHandler.h">
+      <Filter>Packet</Filter>
+    </ClInclude>
+    <ClInclude Include="LoginSessionManager.h">
+      <Filter>SessionManager</Filter>
+    </ClInclude>
+    <ClInclude Include="HandshakeProtocol.h">
+      <Filter>Protocol\Handshake</Filter>
+    </ClInclude>
+    <ClInclude Include="HandshakePacketHandler.h">
+      <Filter>Protocol\Handshake</Filter>
+    </ClInclude>
+    <ClInclude Include="UserProtocol.h">
+      <Filter>Protocol\UserPacket</Filter>
+    </ClInclude>
+    <ClInclude Include="UserPacketHandler.h">
+      <Filter>Protocol\UserPacket</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\protocol\UserProtocol.pb.h">
+      <Filter>Protocol\UserPacket</Filter>
+    </ClInclude>
+    <ClInclude Include="Protocol.h">
+      <Filter>Packet</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp" />
@@ -161,7 +220,7 @@
     <ClCompile Include="DateTime.cpp">
       <Filter>Common</Filter>
     </ClCompile>
-    <ClCompile Include="IocpCore.cpp">
+    <ClCompile Include="IoContext.cpp">
       <Filter>IoEvent</Filter>
     </ClCompile>
     <ClCompile Include="IoEvent.cpp">
@@ -203,6 +262,42 @@
     <ClCompile Include="ServerService.cpp">
       <Filter>IoService</Filter>
     </ClCompile>
+    <ClCompile Include="LoginSession.cpp">
+      <Filter>Session</Filter>
+    </ClCompile>
+    <ClCompile Include="PacketHandler.cpp">
+      <Filter>Packet</Filter>
+    </ClCompile>
+    <ClCompile Include="Handshake.cpp">
+      <Filter>Handshake</Filter>
+    </ClCompile>
+    <ClCompile Include="TcpNetwork.cpp">
+      <Filter>Network</Filter>
+    </ClCompile>
+    <ClCompile Include="LoginSessionManager.cpp">
+      <Filter>SessionManager</Filter>
+    </ClCompile>
+    <ClCompile Include="HandshakeProtocol.cpp">
+      <Filter>Protocol\Handshake</Filter>
+    </ClCompile>
+    <ClCompile Include="HandshakePacketHandler.cpp">
+      <Filter>Protocol\Handshake</Filter>
+    </ClCompile>
+    <ClCompile Include="UserProtocol.cpp">
+      <Filter>Protocol\UserPacket</Filter>
+    </ClCompile>
+    <ClCompile Include="UserPacketHandler.cpp">
+      <Filter>Protocol\UserPacket</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Include\protocol\UserProtocol.pb.cc">
+      <Filter>Protocol\UserPacket</Filter>
+    </ClCompile>
+    <ClCompile Include="Protocol.cpp">
+      <Filter>Packet</Filter>
+    </ClCompile>
+    <ClCompile Include="PacketHeader.cpp">
+      <Filter>Packet</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Xml Include="..\..\Config.xml" />
@@ -211,5 +306,8 @@
     <None Include="..\..\CopyGenerated.bat" />
     <None Include="..\..\.gitignore" />
     <None Include="..\..\README.md" />
+    <None Include="..\..\UserProtocol.proto">
+      <Filter>Protocol</Filter>
+    </None>
   </ItemGroup>
 </Project>

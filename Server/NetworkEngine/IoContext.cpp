@@ -1,10 +1,10 @@
 #include "pch.h"
-#include "IocpCore.h"
+#include "IoContext.h"
 #include "IoEvent.h"
 
 #define GQCS ::GetQueuedCompletionStatus
 
-IocpCore::IocpCore()
+IoContext::IoContext()
 	:
 	_disposed(false),
 	_iocpHandle(::CreateIoCompletionPort(INVALID_HANDLE_VALUE, NULL, NULL, NULL))
@@ -12,18 +12,18 @@ IocpCore::IocpCore()
 	ASSERT_CRASH(_iocpHandle != INVALID_HANDLE_VALUE)
 }
 
-IocpCore::~IocpCore()
+IoContext::~IoContext()
 {
 	dispose();
 }
 
-void IocpCore::registerHandle(HANDLE handle)
+void IoContext::registerHandle(HANDLE handle)
 {
 	_iocpHandle = ::CreateIoCompletionPort(handle, _iocpHandle, NULL, NULL);
 	ASSERT_CRASH(_iocpHandle != NULL)
 }
 
-void IocpCore::dispatch()
+void IoContext::dispatch()
 {
 	ULONG_PTR ignore = 0;
 	IoEvent* ioEvent = 0;
@@ -51,7 +51,7 @@ void IocpCore::dispatch()
 	}
 }
 
-void IocpCore::dispose()
+void IoContext::dispose()
 {
 	_disposed.store(true);
 	::CloseHandle(_iocpHandle);

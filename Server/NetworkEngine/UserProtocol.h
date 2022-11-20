@@ -1,0 +1,10 @@
+#pragma once
+
+enum USER_PROTOCOL : int
+{
+	HEATBEAT = 0,
+	TEST = 1,
+	USER_PROTOCOL_START = HEATBEAT,
+	USER_PROTOCOL_END = TEST,
+};
+

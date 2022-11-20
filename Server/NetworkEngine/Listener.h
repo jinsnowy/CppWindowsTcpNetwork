@@ -8,7 +8,7 @@ struct ListenerConfig
 	int32  backLog;
 	int32  acceptCount;
 
-	SessionFactory sessionFactory;
+	NetworkFactory networkFactory;
 	OnAcceptFunc   onAccept;
 };
 
@@ -29,9 +29,9 @@ public:
 	void stop();
 
 private:
-	bool processAccept(const SessionPtr& session);
+	bool processAccept(const NetworkPtr& session);
 	void registerAccpet();
 
-	vector<SessionPtr> _acceptSessions;;
+	vector<NetworkPtr> _acceptNetworks;;
 	TcpListenerSocket  _listenerSocket;
 };

@@ -1,4 +1,5 @@
 #pragma once
+#include "Protocol.h"
 
 class BufferSource;
 using BufferSourcePtr = shared_ptr<BufferSource>;
@@ -33,6 +34,17 @@ private:
 		return front;
 	}
 
+	CHAR* lend(int32 len)
+	{
+		CHAR* front = &_buffer[_cursor];
+
+		_capacity -= len;
+		_cursor += len;
+		ASSERT_CRASH(_capacity >= 0);
+
+		return front;
+	}
+
 	bool enough(int32 len) { return _capacity >= len; }
 
 	int32 _cursor;
@@ -41,28 +53,39 @@ private:
 
 public:
 	BufferSource() { ZeroMemory(_buffer, BUFFER_SIZE); _cursor = 0; _capacity = BUFFER_SIZE; }
+	
+	template<typename T>
+	static BufferSegment DefaultSerialize(T& packet)
+	{
+		packet.size = sizeof(T);
+		return Sink((CHAR*)&packet, sizeof(T));
+	}
+
+	template<typename T>
+	static BufferSegment Sink(const T& pkt)
+	{
+		int32 pktLen = (int32)pkt.ByteSizeLong();
+		auto segment = SerializePacketHeader(Protocol::GetProtocol<T>(), pktLen);
+
+		if (!pkt.SerializeToArray(segment.buf + sizeof(PacketHeader), pktLen))
+		{
+			return BufferSegment(NULL, 0, NULL);
+		}
+
+		return segment;
+	}
 
 	static BufferSegment Sink(CHAR* data, int32 len)
 	{
-		ASSERT_CRASH(len <= BUFFER_SIZE);
-
-		thread_local queue<BufferSourcePtr> bufferQue;
-
-		if (bufferQue.empty())
-		{
-			bufferQue.push(make());
-		}
-
-		auto buffer = bufferQue.front();
-		if (buffer->enough(len) == false)
-		{
-			bufferQue.pop(); bufferQue.push(make());
-			buffer = bufferQue.front();
-		}
+		auto buffer = GetBuffer(len);
 
 		CHAR* buf = buffer->copy(data, len);
 
 		return BufferSegment(buf, (ULONG)len, buffer);
 	}
+private:
+	static BufferSegment SerializePacketHeader(int32 protocol, int32 pktLen);
+
+	static BufferSourcePtr GetBuffer(int32 len);
 };
 

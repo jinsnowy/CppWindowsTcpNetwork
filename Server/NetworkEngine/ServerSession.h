@@ -4,5 +4,9 @@
 class ServerSession : public Session
 {
 public:
-	ServerSession(IoService& ioService);
+	ServerSession();
+
+protected:
+	virtual void onConnected() override;
+	virtual void onDisconnected() override;
 };

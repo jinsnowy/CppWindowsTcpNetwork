@@ -1,15 +1,15 @@
 #include "pch.h"
 #include "Listener.h"
-#include "Session.h"
+#include "TcpNetwork.h"
 
 struct on_accept_t
 {
 	shared_ptr<Listener> listenerPtr;
-	shared_ptr<Session>  sessionPtr;
+	shared_ptr<TcpNetwork> networkPtr;
 
-	on_accept_t(shared_ptr<Listener> _listenerPtr, shared_ptr<Session> _sessionPtr)
+	on_accept_t(shared_ptr<Listener> _listenerPtr, shared_ptr<TcpNetwork> _networkPtr)
 		:
-		listenerPtr(_listenerPtr), sessionPtr(_sessionPtr)
+		listenerPtr(_listenerPtr), networkPtr(_networkPtr)
 	{}
 
 	void operator()(int32 errorCode, DWORD)
@@ -27,7 +27,7 @@ struct on_accept_t
 			return;
 		}
 
-		if (!listenerPtr->processAccept(sessionPtr))
+		if (!listenerPtr->processAccept(networkPtr))
 		{
 			LOG_ERROR("cannot process accept");
 			listenerPtr->registerAccpet();
@@ -94,39 +94,38 @@ void Listener::stop()
 	_listenerSocket.dispose("listener stop");
 }
 
-bool Listener::processAccept(const SessionPtr& session)
+bool Listener::processAccept(const NetworkPtr& network)
 {
-	if (!_listenerSocket.setUpdateAcceptSocket(session->getSocket()))
+	if (!_listenerSocket.setUpdateAcceptSocket(network->GetSocket()))
 	{
 		LOG_ERROR("cannot update socket : %s", get_last_err_msg());
 		return false;
 	}
 
 	EndPoint endPoint;
-	if (!NetUtils::GetEndPoint(session->getSocket(), endPoint))
+	if (!NetUtils::GetEndPoint(network->GetSocket(), endPoint))
 	{
 		LOG_ERROR("cannot get address : %s", get_last_err_msg());
 		return false;
 	}
 
-	if (!_config.onAccept(session))
+	if (!_config.onAccept(network))
 	{
 		LOG_ERROR("session rejected");
 		return false;
 	}
 
-	session->setEndPoint(endPoint);
-	session->setConnected();
+	network->setConnected(endPoint);
 
 	return true;
 }
 
 void Listener::registerAccpet()
 {
-	SessionPtr session = _config.sessionFactory(_listenerSocket.ioService());
-	LPVOID bufferPtr = session->getRecvBuffer().getBufferPtr();
+	NetworkPtr network = _config.networkFactory(_listenerSocket.ioService());
+	LPVOID bufferPtr = network->GetRecvBuffer().getBufferPtr();
 
-	if (!_listenerSocket.accept_async(session->getSocket(), bufferPtr, on_accept_t(shared_from_this(), session)))
+	if (!_listenerSocket.accept_async(network->GetSocket(), bufferPtr, on_accept_t(shared_from_this(), network)))
 	{
 		if (_finished)
 		{
