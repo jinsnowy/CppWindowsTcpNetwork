@@ -27,7 +27,7 @@ Logger::Logger()
 	:
 	mExitFlag(false),
 	mConsoleLog(true),
-	mFlushDurationMilliSec(1000),
+	mFlushDurationMilliSec(500),
 	mWorker([this]() { this->flush(); }),
 	mLogLevel(ELogLevel::Info)
 {
@@ -60,7 +60,7 @@ Logger::~Logger()
 
 void Logger::initialize()
 {
-	GLogger = Logger::getInstance();
+	GLogger = Logger::GetInstance();
 }
 
 void Logger::out(ELogLevel level, std::thread::id thread_id, int line, const char* function, const char* fmt, ...)
@@ -69,8 +69,8 @@ void Logger::out(ELogLevel level, std::thread::id thread_id, int line, const cha
 		return;
 
 	DateTime now = DateTime::now();
-	std::stringstream ss;
-	ss << thread_id;
+
+	const char* threadIdStr = StdThreadIdStr::Get();
 
 	std::string logstr;
 	va_list arg_ptr;
@@ -84,7 +84,7 @@ void Logger::out(ELogLevel level, std::thread::id thread_id, int line, const cha
 	}
 	va_end(arg_ptr);
 
-	std::string message = Format::format("[%s] [%s] %s [%d] : %s\n", now.toString().c_str(), ss.str().c_str(), function, line, logstr.c_str());
+	std::string message = Format::format("[%s] [%s] %s [%d] : %s\n", now.toString().c_str(), threadIdStr, function, line, logstr.c_str());
 
 	{
 		std::lock_guard<std::mutex> lk(mSync);

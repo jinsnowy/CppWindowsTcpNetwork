@@ -33,15 +33,20 @@ using namespace std;
 #include <mswsock.h>
 #include <rpc.h>
 
+#include "TlsMemory.h"
 #include "Singleton.h"
 #include "Logger.h"
 #include "Define.h"
 #include "Common.h"
 #include "IoEvent.h"
 #include "MemoryPool.h"
+#include "Task.h"
+#include "TaskAsync.h"
+#include "Alarm.h"
+
+#define OUT
 
 #pragma comment(lib, "ws2_32.lib")
-
 #ifdef _DEBUG
 #pragma comment(lib, "libprotobufd.lib")
 #else

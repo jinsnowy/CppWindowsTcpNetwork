@@ -84,6 +84,10 @@ void Session::DisconnectAsync()
 	_network->DisconnectAsync();
 }
 
+void Session::onAuthorized()
+{
+}
+
 void Session::onConnected()
 {
 	LOG_INFO("connected to %s", GetEndPointDesc().c_str());

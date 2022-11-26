@@ -39,8 +39,8 @@
 int main()
 {
     // 1. initialize network engine and register custom packet classes
-    NetworkEngine::getInstance()->initialize();
-    PacketManager::getInstance()->registerImpl(new GeneratedPacketFactory());
+    NetworkEngine::GetInstance()->initialize();
+    PacketManager::GetInstance()->registerImpl(new GeneratedPacketFactory());
 
     // 2. define acceptor factory (acceptor socket and packet handler)
     AcceptorFactory factory(
@@ -73,10 +73,10 @@ int main()
 int main()
 {
     // 1. initialize network engine
-    NetworkEngine::getInstance()->initialize();
+    NetworkEngine::GetInstance()->initialize();
 
     // 2. register custom packet classes
-    PacketManager::getInstance()->registerImpl(new GeneratedPacketFactory());
+    PacketManager::GetInstance()->registerImpl(new GeneratedPacketFactory());
 
     // 3. create connector
     ConnectorFactory factory([]() {return new TcpConnectorSocket(); },
@@ -84,7 +84,7 @@ int main()
 
     std::unique_ptr<TcpConnector> connector(new TcpConnector(factory));
 
-    Logger* logger = Logger::getInstance();
+    Logger* logger = Logger::GetInstance();
     if (!connector->initialize())
     {
         LOG_ERROR(logger, "initialize connector failed");
@@ -136,7 +136,7 @@ public:
     MyPacketHandler(ISender* sender)
         :
         mSender(sender),
-        mLogger(Logger::getInstance())
+        mLogger(Logger::GetInstance())
     {
         registerHandler(&MyPacketHandler::onEchoMessage);
         registerHandler(&MyPacketHandler::onMyPacket);

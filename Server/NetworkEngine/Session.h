@@ -4,6 +4,7 @@ class Session : public std::enable_shared_from_this<Session>
 {
 	friend class TcpNetwork;
 	friend class Listener;
+	friend class HandshakePacketHandler;
 public:
 	Session();
 	virtual ~Session();
@@ -23,10 +24,11 @@ public:
 protected:
 	shared_ptr<TcpNetwork> _network;
 
+	virtual void onAuthorized();
+
 	virtual void onConnected();
 	
 	virtual void onDisconnected();
-
 public:
 	EndPoint	 GetEndPoint();
 	string		 GetEndPointDesc() { return GetEndPoint().toString(); }

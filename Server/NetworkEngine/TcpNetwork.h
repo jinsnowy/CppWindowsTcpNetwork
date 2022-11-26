@@ -17,7 +17,7 @@ private:
 	unique_ptr<Handshake>  _handshake;
 
 public:
-	TcpNetwork(IoService& ioService);
+	TcpNetwork(ServiceBase& ServiceBase);
 
 	~TcpNetwork();
 
@@ -63,13 +63,13 @@ private:
 	void handleError(int32 errorCode);
 private:
 	atomic<bool>			_connected;
-	atomic<bool>			_sendIsPending;
-	StdLock				    _sync;
+	atomic<bool>			_pending;
+	StdMutex				_sync;
 	vector<BufferSegment>	_pendingSegment;
 	RecvBuffer				_recvBuffer;
 
 private:
-	StdLock				    _handlerSync;
+	StdMutex				    _handlerSync;
 	vector<PacketHandler*>  _packetHandlers;
 
 	bool resolvePacketHandler(int32 protocol, PacketHandler** handler);

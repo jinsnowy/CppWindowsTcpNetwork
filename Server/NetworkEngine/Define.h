@@ -19,16 +19,21 @@ using Mutex = std::mutex;
 using UniqueLock = std::unique_lock<std::mutex>;
 using LockGuard = std::lock_guard<std::mutex>;
 
+using AlarmPtr = std::shared_ptr<class Alarm>;
 using SessionPtr = std::shared_ptr<class Session>;
 using SessionWeakPtr = std::weak_ptr<class Session>;
 using SessionPtrCRef = const SessionPtr&;
 using NetworkPtr = std::shared_ptr<class TcpNetwork>;
 using NetworkPtrCRef = const std::shared_ptr<class TcpNetwork>&;
 using SessionFactory = std::function<SessionPtr()>;
-using NetworkFactory = std::function<NetworkPtr(class IoService&)>;
+using NetworkFactory = std::function<NetworkPtr(class ServiceBase&)>;
 using OnAcceptFunc = std::function<bool(NetworkPtr)>;
 using PacketHandlerFunc = std::function<void(SessionPtr)>;
 using HandshakePtr = std::unique_ptr<class Handshake>;
+using TaskPtr = std::unique_ptr<class Task>;
+using PlayerPtr = std::shared_ptr<class Player>;
+using ClientSessionFactory = std::function<std::shared_ptr<class ClientSession>()>;
+using ServerSessionFactory = std::function<std::shared_ptr<class ServerSession>()>;
 
 static const char* get_bool_str(const bool& v) { return v ? "true" : "false"; }
 // check socket call
@@ -57,4 +62,12 @@ static const char* get_bool_str(const bool& v) { return v ? "true" : "false"; }
 		__analysis_assume(expr);	\
 	}								\
 }
+
+template<typename T>
+static shared_ptr<T> SharedGlobal()
+{
+	static shared_ptr<T> inst = make_shared<T>();
+	return inst;
+}
+
 #endif // !_DEFINE_H_

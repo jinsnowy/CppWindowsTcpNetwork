@@ -38,11 +38,11 @@ struct on_accept_t
 	}
 };
 
-Listener::Listener(IoService& ioService, ListenerConfig config)
+Listener::Listener(ServiceBase& ServiceBase, ListenerConfig config)
 	:
 	_finished(false),
 	_config(config),
-	_listenerSocket(ioService)
+	_listenerSocket(ServiceBase)
 {
 }
 
@@ -122,7 +122,7 @@ bool Listener::processAccept(const NetworkPtr& network)
 
 void Listener::registerAccpet()
 {
-	NetworkPtr network = _config.networkFactory(_listenerSocket.ioService());
+	NetworkPtr network = _config.networkFactory(_listenerSocket.GetServiceBase());
 	LPVOID bufferPtr = network->GetRecvBuffer().getBufferPtr();
 
 	if (!_listenerSocket.accept_async(network->GetSocket(), bufferPtr, on_accept_t(shared_from_this(), network)))

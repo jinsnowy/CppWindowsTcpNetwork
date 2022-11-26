@@ -44,8 +44,6 @@ struct on_send_t
 
 	void operator()(int32 errorCode, DWORD writeBytes)
 	{
-		network->_sendIsPending.store(false);
-
 		if (writeBytes == 0)
 		{
 			network->disconnectOnError("write 0");
@@ -102,11 +100,11 @@ struct on_disconnect_t
 	}
 };
 
-TcpNetwork::TcpNetwork(IoService& ioService)
+TcpNetwork::TcpNetwork(ServiceBase& ServiceBase)
 	:
-	_socket(ioService),
+	_socket(ServiceBase),
 	_connected(false),
-	_sendIsPending(false),
+	_pending(false),
 	_session()
 {
 }
@@ -197,7 +195,7 @@ void TcpNetwork::SendAsync(const BufferSegment& segment)
 		_pendingSegment.push_back(segment);
 	}
 
-	if (_sendIsPending.exchange(true) == false)
+	if (_pending.exchange(true) == false)
 	{
 		flush();
 	}
@@ -284,7 +282,10 @@ bool TcpNetwork::flushInternal()
 
 		int32 bufferNum = (int32)_pendingSegment.size();
 		if (bufferNum == 0)
+		{
+			_pending.store(false);
 			return true;
+		}
 
 		buffers.resize(bufferNum);
 		for (int32 i = 0; i < bufferNum; ++i)
@@ -294,9 +295,7 @@ bool TcpNetwork::flushInternal()
 
 		segments = std::move(_pendingSegment);
 	}
-
-	LOG_INFO("send %d buffers", (int)buffers.size());
-
+	
 	return _socket.write_async(buffers, on_send_t(shared_from_this(), std::move(segments)));
 }
 

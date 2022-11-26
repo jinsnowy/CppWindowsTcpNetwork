@@ -13,9 +13,9 @@ public:
 
 	void registerHandle(HANDLE handle);
 
-	void dispatch();
+	void Dispatch(DWORD timeOutMs = INFINITE);
 
-	void dispose();
+	void Dispose();
 
 	bool isFinished() { return _disposed; }
 };

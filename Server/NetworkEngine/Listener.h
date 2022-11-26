@@ -20,7 +20,7 @@ private:
 	ListenerConfig _config;
 
 public:
-	Listener(IoService& ioService, ListenerConfig config);
+	Listener(ServiceBase& ServiceBase, ListenerConfig config);
 	
 	~Listener();
 

@@ -6,22 +6,22 @@
 #include "TcpNetwork.h"
 #include "LoginSession.h"
 #include "LoginSessionManager.h"
-#include "protocol\UserProtocol.pb.h"
 
 ServerService::ServerService(const ServerServiceParam& param)
 	:
-	IoService(std::thread::hardware_concurrency()),
+	ServiceBase(std::thread::hardware_concurrency()),
 	_port(param.port),
-	_backLog(param.backLog)
+	_backLog(param.backLog),
+    _sessionFactory(param.sessionFactory)
 {
 }
 
 void ServerService::Start()
 {
-    IoService::Start();
+    ServiceBase::Start();
 
-    auto loginManager = LoginSessionManager::getInstance();
-
+    auto loginManager = LoginSessionManager::GetInstance();
+    loginManager->SetSessionFactory(_sessionFactory);
     loginManager->Start();
 
     ListenerConfig config;
@@ -36,37 +36,14 @@ void ServerService::Start()
         return true;
     };
 
-    config.networkFactory = [](IoService& ioService)
+    config.networkFactory = [](ServiceBase& ServiceBase)
     {
-        return make_shared<TcpNetwork>(ioService);
+        return make_shared<TcpNetwork>(ServiceBase);
     };
 
     auto listener = make_shared<Listener>(*this, config);
     if (!listener->start())
     {
         throw std::exception("listener start failed");
-    }
-}
-
-void ServerService::Run()
-{
-    IoService::Run();
-
-    UserProtocol::TEST test;
-    test.set_text("Hello World\n");
-
-    while (true)
-    {
-
-        auto sessions = SessionManager::getInstance()->getSessions();
-
-        for (auto& session : sessions)
-        {
-            BufferSegment segment = BufferSource::Sink(test);
-
-            session->SendAsync(segment);
-        }
-
-        std::this_thread::sleep_for(100ms);
     }
 }

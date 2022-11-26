@@ -4,7 +4,6 @@
 #include "SessionManager.h"
 #include "ServerSession.h"
 #include "TcpNetwork.h"
-#include "UserPacketHandler.h"
 
 LoginSessionManager::~LoginSessionManager()
 {
@@ -32,21 +31,26 @@ void LoginSessionManager::Start()
     });
 }
 
+void LoginSessionManager::SetSessionFactory(ServerSessionFactory sessionFactory)
+{
+    _sessionFactory = sessionFactory;
+}
+
 void LoginSessionManager::Authorize(shared_ptr<LoginSession> loginSession)
 {
     SessionID sessionId = loginSession->GetSessionId();
     removeSession(sessionId);
 
     auto network = loginSession->GetNetwork();
-    auto serverSession = make_shared<ServerSession>();
+    auto serverSession = _sessionFactory();
     serverSession->SetSessionId(sessionId);
 
-    network->InstallPacketHandler<UserPacketHandler>();
     network->AttachSession(serverSession);
+    serverSession->onAuthorized();
 
-    SessionManager::getInstance()->addSession(serverSession);
+    SessionManager::GetInstance()->addSession(serverSession);
 
-    LOG_INFO("Authroize %llu", sessionId);
+    LOG_INFO("Authorize %llu", sessionId);
 }
 
 void LoginSessionManager::checkLogins()
@@ -112,6 +116,8 @@ bool LoginSessionManager::existSession(SessionID sessionId)
 
 void LoginSessionManager::removeSession(shared_ptr<LoginSession> session)
 {
+    LockGuard lk(_mtx);
+
     if (_logins.erase(session->GetSessionId()) > 0)
         return;
 

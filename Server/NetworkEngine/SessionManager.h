@@ -14,6 +14,6 @@ public:
 	vector<shared_ptr<Session>> getSessions();
 
 private:
-	StdLock _sync;
+	StdMutex _sync;
 	std::map<SessionID, shared_ptr<Session>> _sessionContainer;
 };

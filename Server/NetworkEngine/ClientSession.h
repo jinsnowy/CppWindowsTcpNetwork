@@ -18,11 +18,16 @@ public:
 
 	void ReconnectAsync(const EndPoint& endPoint);
 
+	bool IsLogin() { return _logined; }
 protected:
 	virtual void onConnected() override;
 
 	virtual void onDisconnected() override;
 
+	virtual void onAuthorized() override;
+
 private:
 	shared_ptr<TcpNetwork> _connector;
+	
+	atomic<bool> _logined;
 };

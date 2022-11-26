@@ -4,7 +4,8 @@
 
 ClientSession::ClientSession()
 	:
-	Session()
+	Session(),
+	_logined(false)
 {
 }
 
@@ -82,4 +83,11 @@ void ClientSession::onConnected()
 void ClientSession::onDisconnected()
 {
 	Session::onDisconnected();
+
+	_logined = false;
+}
+
+void ClientSession::onAuthorized()
+{
+	_logined = true;
 }

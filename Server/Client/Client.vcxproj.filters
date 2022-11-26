@@ -4,14 +4,32 @@
     <Filter Include="main">
       <UniqueIdentifier>{e85987d0-4e77-408c-a686-441e4020b8bd}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ClientPacketHandler">
+      <UniqueIdentifier>{c371cfa9-6be2-44d6-a99e-e6cc88ceadf3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="PlayerSession">
+      <UniqueIdentifier>{2209b4a7-b2d0-4c89-bfa6-cc6e27d2637b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Program.cpp">
       <Filter>main</Filter>
     </ClCompile>
     <ClCompile Include="stdafx.cpp" />
+    <ClCompile Include="ClientPacketHandler.cpp">
+      <Filter>ClientPacketHandler</Filter>
+    </ClCompile>
+    <ClCompile Include="PlayerSession.cpp">
+      <Filter>PlayerSession</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h" />
+    <ClInclude Include="ClientPacketHandler.h">
+      <Filter>ClientPacketHandler</Filter>
+    </ClInclude>
+    <ClInclude Include="PlayerSession.h">
+      <Filter>PlayerSession</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

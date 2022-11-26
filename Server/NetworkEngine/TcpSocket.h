@@ -1,19 +1,19 @@
 #pragma once
 
-class IoService;
+class ServiceBase;
 class TcpSocket
 {
-	friend class IoService;
+	friend class ServiceBase;
 	friend class TcpListenerSocket;
 protected:
 	SOCKET	   _socket;
 
 private:
-	IoService& _ioService;
+	ServiceBase& _service;
 	atomic<bool> _disposed;
 
 public:
-	TcpSocket(IoService& ioService);
+	TcpSocket(ServiceBase& service);
 	
 	SOCKET   getSocket() { return _socket; }
 
@@ -32,7 +32,7 @@ public:
 class TcpAsyncSocket : public TcpSocket
 {
 public:
-	TcpAsyncSocket(IoService& ioService);
+	TcpAsyncSocket(ServiceBase& service);
 
 	template<typename AsyncIoCompleteRoutine>
 	bool write_async(char* buffer, DWORD len, AsyncIoCompleteRoutine&& callback)
@@ -113,7 +113,7 @@ public:
 class TcpActiveSocket : public TcpAsyncSocket
 {
 public:
-	TcpActiveSocket(IoService& ioService);
+	TcpActiveSocket(ServiceBase& service);
 };
 
 class TcpListenerSocket : public TcpSocket
@@ -122,7 +122,7 @@ private:
 	EndPoint _bindEndPoint;
 
 public:
-	TcpListenerSocket(IoService& ioService);
+	TcpListenerSocket(ServiceBase& service);
 
 	EndPoint getAddress() { return _bindEndPoint; }
 
@@ -147,5 +147,5 @@ public:
 		return true;
 	}
 
-	IoService& ioService() { return TcpSocket::_ioService; }
+	ServiceBase& GetServiceBase() { return TcpSocket::_service; }
 };

@@ -13,13 +13,9 @@ struct StdThreadId
 		struct ThreadIdInit
 		{
 			size_t Id;
-
 			ThreadIdInit()
 			{
 				Id = std::hash<std::thread::id>{}(std::this_thread::get_id());
-				if (Id == 0) {
-					throw std::runtime_error("Thread Id cannot be zero");
-				}
 			}
 		};
 
@@ -29,7 +25,29 @@ struct StdThreadId
 	}
 };
 
-class StdLock
+struct StdThreadIdStr
+{
+	static inline const char* Get()
+	{
+		struct StdThreadIdStrInit
+		{
+			string IdStr;
+
+			StdThreadIdStrInit()
+			{
+				stringstream ss;
+				ss << std::this_thread::get_id();
+				IdStr = ss.str();
+			}
+		};
+
+		thread_local StdThreadIdStrInit threadId;
+
+		return threadId.IdStr.c_str();
+	}
+};
+
+class StdMutex
 {
 private:
 	size_t		_owner_thread;
@@ -37,7 +55,7 @@ private:
 	SharedMutex _mutex;
 
 public:
-	StdLock() : _owner_thread(0), _write_count(0), _mutex{}
+	StdMutex() : _owner_thread(0), _write_count(0), _mutex{}
 	{
 	}
 
@@ -98,5 +116,5 @@ public:
 	}
 };
 
-using StdWriteLock = std::unique_lock<StdLock>;
-using StdReadLock = std::shared_lock<StdLock>;
+using StdWriteLock = std::unique_lock<StdMutex>;
+using StdReadLock = std::shared_lock<StdMutex>;

@@ -3,16 +3,16 @@
 #include "IoContext.h"
 
 class IoContext;
-class IoService
+class ServiceBase
 {
 public:
-	IoService(int threadWorkerNum);
+	ServiceBase(int threadWorkerNum);
 
-	~IoService();
+	~ServiceBase();
 
 	virtual void Start();
 
-	virtual void Run();
+	void Run(function<void()> func);
 
 	IoContext& GetContext() { return _ioContext; }
 
@@ -22,5 +22,8 @@ protected:
 private:
 	IoContext	   _ioContext;
 	int			   _threadNum;
-	vector<thread> _ioWorkers;
+	vector<thread> _threadWorkers;
+
+private:
+	void ProcessCore();
 };

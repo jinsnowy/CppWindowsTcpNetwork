@@ -1,5 +1,4 @@
 #pragma once
-#include "protocol\UserProtocol.pb.h"
 
 #define USE_PROTOCOL(p)\
 template<>\
@@ -15,6 +14,3 @@ public:
 	template<typename T>
 	static int32 GetProtocol() { return 0; }
 };
-
-USE_PROTOCOL(UserProtocol::TEST);
-USE_PROTOCOL(UserProtocol::HEARTBEAT);

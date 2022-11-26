@@ -13,25 +13,9 @@ LoginSession::LoginSession()
 
 void LoginSession::makeSessionId()
 {
-	std::string loginId;
+	static atomic<uint64> sessionId(1000);
 
-	auto t = _createTime;
-
-	while (t > 0)
-	{
-		char c = (t & 0xFF) % 128;
-
-		loginId.push_back(c);
-
-		t >>= 16;
-	}
-
-	static random_device rd;
-	static default_random_engine rng(rd());
-	
-	std::shuffle(loginId.begin(), loginId.end(), rng);
-
-	SetSessionId(std::hash<std::string>{}(loginId));
+	SetSessionId(sessionId.fetch_add(1));
 }
 
 void LoginSession::onConnected()
@@ -50,5 +34,5 @@ void LoginSession::onDisconnected()
 {
 	LOG_INFO("LoginSession (%lld) disconnected", GetSessionId());
 
-	LoginSessionManager::getInstance()->removeSession(GetShared<LoginSession>());
+	LoginSessionManager::GetInstance()->removeSession(GetShared<LoginSession>());
 }

@@ -31,9 +31,6 @@
     <Filter Include="Buffer">
       <UniqueIdentifier>{f2e867cf-6733-4064-9cf7-0508497325e3}</UniqueIdentifier>
     </Filter>
-    <Filter Include="IoService">
-      <UniqueIdentifier>{cec31a39-bdd1-463e-a6e1-db943edd82ff}</UniqueIdentifier>
-    </Filter>
     <Filter Include="SessionManager">
       <UniqueIdentifier>{ca2e1954-ebde-4968-a8fa-03f6e5c2755a}</UniqueIdentifier>
     </Filter>
@@ -52,8 +49,20 @@
     <Filter Include="Protocol\Handshake">
       <UniqueIdentifier>{1fd2caf6-b755-4192-8be1-3a44696f41cf}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Protocol\UserPacket">
-      <UniqueIdentifier>{57a8ff0d-542e-4187-b70b-047898a6f588}</UniqueIdentifier>
+    <Filter Include="Task">
+      <UniqueIdentifier>{29a3626b-f726-4525-bb38-6ddc133ea089}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="UserProtocol">
+      <UniqueIdentifier>{8083a7b4-0d10-44aa-b29b-c95e47db023a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="UserProtocol\Protobuf">
+      <UniqueIdentifier>{50d66f21-069c-4c3c-b79c-cf37a3d2842c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Service">
+      <UniqueIdentifier>{cec31a39-bdd1-463e-a6e1-db943edd82ff}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Alaram">
+      <UniqueIdentifier>{8c8d7194-af3b-4a05-aab2-c5466e1e8a03}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -118,7 +127,7 @@
     <ClInclude Include="MemoryPool.h">
       <Filter>Memory</Filter>
     </ClInclude>
-    <ClInclude Include="StdLock.h">
+    <ClInclude Include="StdMutex.h">
       <Filter>Common</Filter>
     </ClInclude>
     <ClInclude Include="Session.h">
@@ -133,8 +142,8 @@
     <ClInclude Include="ServerSession.h">
       <Filter>Session</Filter>
     </ClInclude>
-    <ClInclude Include="IoService.h">
-      <Filter>IoService</Filter>
+    <ClInclude Include="ServiceBase.h">
+      <Filter>Service</Filter>
     </ClInclude>
     <ClInclude Include="ClientSession.h">
       <Filter>Session</Filter>
@@ -143,13 +152,13 @@
       <Filter>Buffer</Filter>
     </ClInclude>
     <ClInclude Include="ClientService.h">
-      <Filter>IoService</Filter>
+      <Filter>Service</Filter>
     </ClInclude>
     <ClInclude Include="SessionManager.h">
       <Filter>SessionManager</Filter>
     </ClInclude>
     <ClInclude Include="ServerService.h">
-      <Filter>IoService</Filter>
+      <Filter>Service</Filter>
     </ClInclude>
     <ClInclude Include="LoginSession.h">
       <Filter>Session</Filter>
@@ -181,17 +190,50 @@
     <ClInclude Include="HandshakePacketHandler.h">
       <Filter>Protocol\Handshake</Filter>
     </ClInclude>
-    <ClInclude Include="UserProtocol.h">
-      <Filter>Protocol\UserPacket</Filter>
-    </ClInclude>
-    <ClInclude Include="UserPacketHandler.h">
-      <Filter>Protocol\UserPacket</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Include\protocol\UserProtocol.pb.h">
-      <Filter>Protocol\UserPacket</Filter>
-    </ClInclude>
     <ClInclude Include="Protocol.h">
       <Filter>Packet</Filter>
+    </ClInclude>
+    <ClInclude Include="Task.h">
+      <Filter>Task</Filter>
+    </ClInclude>
+    <ClInclude Include="TaskSchedule.h">
+      <Filter>Task</Filter>
+    </ClInclude>
+    <ClInclude Include="TaskSerializer.h">
+      <Filter>Task</Filter>
+    </ClInclude>
+    <ClInclude Include="UserProtocol.h">
+      <Filter>UserProtocol</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\protocol\Enum.pb.h">
+      <Filter>UserProtocol\Protobuf</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\protocol\Struct.pb.h">
+      <Filter>UserProtocol\Protobuf</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\protocol\UserProtocol.pb.h">
+      <Filter>UserProtocol\Protobuf</Filter>
+    </ClInclude>
+    <ClInclude Include="TaskScheduler.h">
+      <Filter>Task</Filter>
+    </ClInclude>
+    <ClInclude Include="ITaskCreator.h">
+      <Filter>Task</Filter>
+    </ClInclude>
+    <ClInclude Include="PoolObject.h">
+      <Filter>Memory</Filter>
+    </ClInclude>
+    <ClInclude Include="TaskAsync.h">
+      <Filter>Task</Filter>
+    </ClInclude>
+    <ClInclude Include="TlsMemory.h">
+      <Filter>Memory</Filter>
+    </ClInclude>
+    <ClInclude Include="Alarm.h">
+      <Filter>Alaram</Filter>
+    </ClInclude>
+    <ClInclude Include="AlarmManager.h">
+      <Filter>Alaram</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -229,7 +271,7 @@
     <ClCompile Include="MemoryPool.cpp">
       <Filter>Memory</Filter>
     </ClCompile>
-    <ClCompile Include="StdLock.cpp">
+    <ClCompile Include="StdMutex.cpp">
       <Filter>Common</Filter>
     </ClCompile>
     <ClCompile Include="Session.cpp">
@@ -244,8 +286,8 @@
     <ClCompile Include="ServerSession.cpp">
       <Filter>Session</Filter>
     </ClCompile>
-    <ClCompile Include="IoService.cpp">
-      <Filter>IoService</Filter>
+    <ClCompile Include="ServiceBase.cpp">
+      <Filter>Service</Filter>
     </ClCompile>
     <ClCompile Include="ClientSession.cpp">
       <Filter>Session</Filter>
@@ -254,13 +296,13 @@
       <Filter>Buffer</Filter>
     </ClCompile>
     <ClCompile Include="ClientService.cpp">
-      <Filter>IoService</Filter>
+      <Filter>Service</Filter>
     </ClCompile>
     <ClCompile Include="SessionManager.cpp">
       <Filter>SessionManager</Filter>
     </ClCompile>
     <ClCompile Include="ServerService.cpp">
-      <Filter>IoService</Filter>
+      <Filter>Service</Filter>
     </ClCompile>
     <ClCompile Include="LoginSession.cpp">
       <Filter>Session</Filter>
@@ -283,20 +325,53 @@
     <ClCompile Include="HandshakePacketHandler.cpp">
       <Filter>Protocol\Handshake</Filter>
     </ClCompile>
-    <ClCompile Include="UserProtocol.cpp">
-      <Filter>Protocol\UserPacket</Filter>
-    </ClCompile>
-    <ClCompile Include="UserPacketHandler.cpp">
-      <Filter>Protocol\UserPacket</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\Include\protocol\UserProtocol.pb.cc">
-      <Filter>Protocol\UserPacket</Filter>
-    </ClCompile>
     <ClCompile Include="Protocol.cpp">
       <Filter>Packet</Filter>
     </ClCompile>
     <ClCompile Include="PacketHeader.cpp">
       <Filter>Packet</Filter>
+    </ClCompile>
+    <ClCompile Include="Task.cpp">
+      <Filter>Task</Filter>
+    </ClCompile>
+    <ClCompile Include="TaskSchedule.cpp">
+      <Filter>Task</Filter>
+    </ClCompile>
+    <ClCompile Include="TaskSerializer.cpp">
+      <Filter>Task</Filter>
+    </ClCompile>
+    <ClCompile Include="UserProtocol.cpp">
+      <Filter>UserProtocol</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Include\protocol\Enum.pb.cc">
+      <Filter>UserProtocol\Protobuf</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Include\protocol\Struct.pb.cc">
+      <Filter>UserProtocol\Protobuf</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Include\protocol\UserProtocol.pb.cc">
+      <Filter>UserProtocol\Protobuf</Filter>
+    </ClCompile>
+    <ClCompile Include="TaskScheduler.cpp">
+      <Filter>Task</Filter>
+    </ClCompile>
+    <ClCompile Include="ITaskCreator.cpp">
+      <Filter>Task</Filter>
+    </ClCompile>
+    <ClCompile Include="PoolObject.cpp">
+      <Filter>Memory</Filter>
+    </ClCompile>
+    <ClCompile Include="TaskAsync.cpp">
+      <Filter>Task</Filter>
+    </ClCompile>
+    <ClCompile Include="TlsMemory.cpp">
+      <Filter>Memory</Filter>
+    </ClCompile>
+    <ClCompile Include="Alarm.cpp">
+      <Filter>Alaram</Filter>
+    </ClCompile>
+    <ClCompile Include="AlarmManager.cpp">
+      <Filter>Alaram</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -307,7 +382,13 @@
     <None Include="..\..\.gitignore" />
     <None Include="..\..\README.md" />
     <None Include="..\..\UserProtocol.proto">
-      <Filter>Protocol</Filter>
+      <Filter>UserProtocol</Filter>
+    </None>
+    <None Include="..\..\Enum.proto">
+      <Filter>UserProtocol</Filter>
+    </None>
+    <None Include="..\..\Struct.proto">
+      <Filter>UserProtocol</Filter>
     </None>
   </ItemGroup>
 </Project>

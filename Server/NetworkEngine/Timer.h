@@ -13,8 +13,10 @@ private:
 public:
 	static Timer startNew() noexcept { return Timer(); }
 
+	void start() { mStart = Clock::now(); }
+
 	template<typename T>
-	auto count()
+	auto count() const
 	{
 		return std::chrono::duration_cast<T>(Clock::now() - mStart).count();
 	}

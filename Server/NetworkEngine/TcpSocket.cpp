@@ -1,13 +1,13 @@
 #include "pch.h"
 #include "TcpSocket.h"
-#include "IoService.h"
+#include "ServiceBase.h"
 
-TcpSocket::TcpSocket(IoService& ioService)
+TcpSocket::TcpSocket(ServiceBase& service)
 	:
-	_ioService(ioService),
+	_service(service),
 	_socket(NetUtils::CreateSocket())
 {
-	_ioService.GetContext().registerHandle((HANDLE)_socket);
+	_service.GetContext().registerHandle((HANDLE)_socket);
 }
 
 TcpSocket::~TcpSocket()
@@ -57,21 +57,21 @@ void TcpSocket::close(const char* reason)
 	NetUtils::Shutdown(_socket, SD_BOTH);
 }
 
-TcpAsyncSocket::TcpAsyncSocket(IoService& ioService)
+TcpAsyncSocket::TcpAsyncSocket(ServiceBase& service)
 	:
-	TcpSocket(ioService)
+	TcpSocket(service)
 {
 }
 
-TcpActiveSocket::TcpActiveSocket(IoService& ioService)
+TcpActiveSocket::TcpActiveSocket(ServiceBase& service)
 	:
-	TcpAsyncSocket(ioService)
+	TcpAsyncSocket(service)
 {
 }
 
-TcpListenerSocket::TcpListenerSocket(IoService& ioService)
+TcpListenerSocket::TcpListenerSocket(ServiceBase& service)
 	:
-	TcpSocket(ioService)
+	TcpSocket(service)
 {
 }
 

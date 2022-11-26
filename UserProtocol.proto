@@ -1,6 +1,8 @@
 syntax = "proto3";
 package UserProtocol;
 
+import "Struct.proto";
+
 message HEARTBEAT
 {
 	uint64 sessionId = 1;
@@ -10,4 +12,23 @@ message HEARTBEAT
 message TEST
 {
 	string text = 1;
+}
+
+message LOGIN_REQUEST
+{
+	Player player = 1;
+}
+
+message LOGIN_RESPONSE
+{
+	Player player = 1;
+}
+
+message ENTER_ROOM_REQUEST
+{
+}
+
+message ENTER_ROOM_RESPONSE
+{
+	int32 id = 1;
 }

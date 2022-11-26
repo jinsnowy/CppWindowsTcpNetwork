@@ -175,26 +175,34 @@ CALL GenPackets.bat</Command>
 CALL GenPackets.bat</Command>
     </PreBuildEvent>
     <PostBuildEvent>
-      <Command>cd $(SolutionDir)..
-call CopyHeader.bat .\Server\NetworkEngine\*.h include\networkengine
-cd $(SolutionDir)..
-call CopyGenerated.bat .\Generated\Generated*.h include\networkengine</Command>
+      <Command>
+      </Command>
     </PostBuildEvent>
     <Lib>
       <AdditionalLibraryDirectories>$(SolutionDir)..\Lib\$(Configuration);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Lib>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\Include\protocol\Enum.pb.h" />
+    <ClInclude Include="..\..\Include\protocol\Struct.pb.h" />
     <ClInclude Include="..\..\Include\protocol\UserProtocol.pb.h" />
+    <ClInclude Include="Alarm.h" />
+    <ClInclude Include="AlarmManager.h" />
     <ClInclude Include="ClientService.h" />
     <ClInclude Include="ClientSession.h" />
-    <ClInclude Include="UserProtocol.h" />
+    <ClInclude Include="ITaskCreator.h" />
+    <ClInclude Include="PoolObject.h" />
+    <ClInclude Include="Task.h" />
+    <ClInclude Include="TaskAsync.h" />
+    <ClInclude Include="TaskSchedule.h" />
+    <ClInclude Include="TaskScheduler.h" />
+    <ClInclude Include="TaskSerializer.h" />
     <ClInclude Include="HandshakePacketHandler.h" />
     <ClInclude Include="HandshakeProtocol.h" />
     <ClInclude Include="Handshake.h" />
     <ClInclude Include="IoContext.h" />
     <ClInclude Include="IoEvent.h" />
-    <ClInclude Include="IoService.h" />
+    <ClInclude Include="ServiceBase.h" />
     <ClInclude Include="Listener.h" />
     <ClInclude Include="LoginSession.h" />
     <ClInclude Include="LoginSessionManager.h" />
@@ -207,11 +215,12 @@ call CopyGenerated.bat .\Generated\Generated*.h include\networkengine</Command>
     <ClInclude Include="Session.h" />
     <ClInclude Include="BufferSource.h" />
     <ClInclude Include="SessionManager.h" />
-    <ClInclude Include="StdLock.h" />
+    <ClInclude Include="StdMutex.h" />
     <ClInclude Include="Stl.h" />
     <ClInclude Include="CorePch.h" />
     <ClInclude Include="NetUtils.h" />
-    <ClInclude Include="UserPacketHandler.h" />
+    <ClInclude Include="TlsMemory.h" />
+    <ClInclude Include="UserProtocol.h" />
     <ClInclude Include="Xml.h" />
     <ClInclude Include="Timer.h" />
     <ClInclude Include="Common.h" />
@@ -233,22 +242,38 @@ call CopyGenerated.bat .\Generated\Generated*.h include\networkengine</Command>
     <ClInclude Include="Protocol.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\Include\protocol\Enum.pb.cc">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="..\..\Include\protocol\Struct.pb.cc">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
+    </ClCompile>
     <ClCompile Include="..\..\Include\protocol\UserProtocol.pb.cc">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="Alarm.cpp" />
+    <ClCompile Include="AlarmManager.cpp" />
     <ClCompile Include="ClientService.cpp" />
     <ClCompile Include="ClientSession.cpp" />
     <ClCompile Include="DateTime.cpp" />
+    <ClCompile Include="ITaskCreator.cpp" />
     <ClCompile Include="PacketHeader.cpp" />
+    <ClCompile Include="PoolObject.cpp" />
     <ClCompile Include="Protocol.cpp" />
-    <ClCompile Include="UserProtocol.cpp" />
+    <ClCompile Include="Task.cpp" />
+    <ClCompile Include="TaskAsync.cpp" />
+    <ClCompile Include="TaskSchedule.cpp" />
+    <ClCompile Include="TaskScheduler.cpp" />
+    <ClCompile Include="TaskSerializer.cpp" />
     <ClCompile Include="HandshakePacketHandler.cpp" />
     <ClCompile Include="HandshakeProtocol.cpp" />
     <ClCompile Include="Handshake.cpp" />
     <ClCompile Include="IoContext.cpp" />
     <ClCompile Include="IoEvent.cpp" />
-    <ClCompile Include="IoService.cpp" />
+    <ClCompile Include="ServiceBase.cpp" />
     <ClCompile Include="Listener.cpp" />
     <ClCompile Include="LoginSession.cpp" />
     <ClCompile Include="LoginSessionManager.cpp" />
@@ -261,8 +286,9 @@ call CopyGenerated.bat .\Generated\Generated*.h include\networkengine</Command>
     <ClCompile Include="Session.cpp" />
     <ClCompile Include="BufferSource.cpp" />
     <ClCompile Include="SessionManager.cpp" />
-    <ClCompile Include="StdLock.cpp" />
-    <ClCompile Include="UserPacketHandler.cpp" />
+    <ClCompile Include="StdMutex.cpp" />
+    <ClCompile Include="TlsMemory.cpp" />
+    <ClCompile Include="UserProtocol.cpp" />
     <ClCompile Include="Xml.cpp" />
     <ClCompile Include="EndPoint.cpp" />
     <ClCompile Include="Logger.cpp" />
@@ -286,8 +312,10 @@ call CopyGenerated.bat .\Generated\Generated*.h include\networkengine</Command>
   <ItemGroup>
     <None Include="..\..\.gitignore" />
     <None Include="..\..\CopyGenerated.bat" />
-    <None Include="..\..\UserProtocol.proto" />
+    <None Include="..\..\Enum.proto" />
     <None Include="..\..\README.md" />
+    <None Include="..\..\Struct.proto" />
+    <None Include="..\..\UserProtocol.proto" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

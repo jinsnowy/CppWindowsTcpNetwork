@@ -14,7 +14,7 @@ IoContext::IoContext()
 
 IoContext::~IoContext()
 {
-	dispose();
+	Dispose();
 }
 
 void IoContext::registerHandle(HANDLE handle)
@@ -23,35 +23,38 @@ void IoContext::registerHandle(HANDLE handle)
 	ASSERT_CRASH(_iocpHandle != NULL)
 }
 
-void IoContext::dispatch()
+void IoContext::Dispatch(DWORD timeOutMs)
 {
 	ULONG_PTR ignore = 0;
 	IoEvent* ioEvent = 0;
 	DWORD numberOfBytesTransferred = 0;
 
-	while (!_disposed)
+	if (GQCS(_iocpHandle, &numberOfBytesTransferred, &ignore, reinterpret_cast<LPOVERLAPPED*>(&ioEvent), timeOutMs))
 	{
-		if (GQCS(_iocpHandle, &numberOfBytesTransferred, &ignore, reinterpret_cast<LPOVERLAPPED*>(&ioEvent), INFINITE))
-		{
-			(*ioEvent)(0, numberOfBytesTransferred);
-		}
-		else
-		{
-			if (_disposed)
-			{
-				LOG_INFO("iocp ends");
-				return;
-			}
-
-			int32 errCode = ::WSAGetLastError();
-			(*ioEvent)(errCode, numberOfBytesTransferred);
-		}
-
-		ioEvent->release();
+		(*ioEvent)(0, numberOfBytesTransferred);
 	}
+	else
+	{
+		if (_disposed)
+		{
+			LOG_INFO("iocp ends");
+			return;
+		}
+
+		int32 errCode = ::WSAGetLastError();
+		if (errCode == WSA_WAIT_TIMEOUT)
+		{
+			ASSERT_CRASH(ioEvent == nullptr);
+			return;
+		}
+
+		(*ioEvent)(errCode, numberOfBytesTransferred);
+	}
+
+	ioEvent->release();
 }
 
-void IoContext::dispose()
+void IoContext::Dispose()
 {
 	_disposed.store(true);
 	::CloseHandle(_iocpHandle);

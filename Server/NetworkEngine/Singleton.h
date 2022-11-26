@@ -15,7 +15,7 @@ public:
 	ISingleton(ISingleton&&) = delete;
 	ISingleton& operator=(ISingleton&&) = delete;
 
-	static T* getInstance()
+	static T* GetInstance()
 	{
 		static T instance;
 		return &instance;

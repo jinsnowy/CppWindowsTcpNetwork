@@ -5,14 +5,50 @@
       <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
       <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
     </Filter>
+    <Filter Include="Room">
+      <UniqueIdentifier>{0b080d4c-8e71-400b-a908-cbffc9e6a344}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Player">
+      <UniqueIdentifier>{d19da128-e9d6-4425-9740-a37189cda5b8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ServerPacketHandler">
+      <UniqueIdentifier>{1b9ab3c8-1914-4a8b-a588-bf5ec3d23f18}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="UserSession">
+      <UniqueIdentifier>{3a2ef896-5281-4379-a30e-3f3fceab19d5}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Program.cpp">
       <Filter>main</Filter>
     </ClCompile>
     <ClCompile Include="stdafx.cpp" />
+    <ClCompile Include="Room.cpp">
+      <Filter>Room</Filter>
+    </ClCompile>
+    <ClCompile Include="Player.cpp">
+      <Filter>Player</Filter>
+    </ClCompile>
+    <ClCompile Include="ServerPacketHandler.cpp">
+      <Filter>ServerPacketHandler</Filter>
+    </ClCompile>
+    <ClCompile Include="UserSession.cpp">
+      <Filter>UserSession</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h" />
+    <ClInclude Include="Room.h">
+      <Filter>Room</Filter>
+    </ClInclude>
+    <ClInclude Include="Player.h">
+      <Filter>Player</Filter>
+    </ClInclude>
+    <ClInclude Include="ServerPacketHandler.h">
+      <Filter>ServerPacketHandler</Filter>
+    </ClInclude>
+    <ClInclude Include="UserSession.h">
+      <Filter>UserSession</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

@@ -6,22 +6,23 @@
 
 ClientService::ClientService(const ClientServiceParam& param)
 	:
-	IoService(param.workerNum),
+	ServiceBase(param.workerNum),
 	_clientNum(param.clientNum),
-	_endPoint(param.address, param.port)
+	_endPoint(param.address, param.port),
+	_sessionFactory(param.sessionFactory)
 {
 }
 
 void ClientService::Start()
 {
-	IoService::Start();
+	ServiceBase::Start();
 
 	std::this_thread::sleep_for(2s);
 
 	for (int i = 0; i < _clientNum; ++i)
 	{
 		auto connector = make_shared<TcpNetwork>(*this);
-		auto clientSession = make_shared<ClientSession>();
+		auto clientSession = _sessionFactory();
 		clientSession->SetConnector(connector);
 
 		auto clientHandshake = new ClientHandshake(connector);
@@ -32,10 +33,13 @@ void ClientService::Start()
 	}
 }
 
-void ClientService::Run()
+void ClientService::Broadcast(BufferSegment buffer)
 {
-	while (1)
+	for (auto& client : _clients)
 	{
-		std::this_thread::sleep_for(5s);
+		if (client->IsLogin())
+		{
+			client->SendAsync(buffer);
+		}
 	}
 }
