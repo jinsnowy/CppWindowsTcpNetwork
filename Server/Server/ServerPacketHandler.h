@@ -1,7 +1,8 @@
 #pragma once
-#include "UserProtocol.h"
 
-class ServerPacketHandler : public UserPacketHandler
+#include "protocol/UserProtocolHandler.h"
+
+class ServerPacketHandler : public UserProtocolPacketHandler
 {
 public:
 	virtual void onHeartbeat(SessionPtrCRef session, UserProtocol::HEARTBEAT pkt) override;

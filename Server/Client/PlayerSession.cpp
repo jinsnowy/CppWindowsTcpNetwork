@@ -21,5 +21,5 @@ void PlayerSession::onAuthorized()
 	request.mutable_player()->set_id(playerId);
 	request.mutable_player()->set_name("player_" + to_string(playerId));
 
-	SendAsync(BufferSource::Sink(request));
+	SendAsync(BufferSegment::Serialize(request));
 }

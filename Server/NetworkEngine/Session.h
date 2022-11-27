@@ -29,9 +29,10 @@ protected:
 	virtual void onConnected();
 	
 	virtual void onDisconnected();
+
 public:
 	EndPoint	 GetEndPoint();
-	string		 GetEndPointDesc() { return GetEndPoint().toString(); }
+	string		 GetEndPointDesc() { return GetEndPoint().ToString(); }
 	NetworkPtr	 GetNetwork() { return _network; }
 
 	SessionID	 GetSessionId() { return _sessionId; }
@@ -41,8 +42,8 @@ private:
 	SessionID _sessionId;
 
 	bool onRecv(const PacketHeader& header, CHAR* dataStartPtr);
+	void recv(DWORD recvBytes);
+
 	void attachNetwork(shared_ptr<TcpNetwork> network);
 	void detachNetwork();
-private:
-	void recv(DWORD recvBytes);
 };

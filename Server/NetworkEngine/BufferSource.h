@@ -1,16 +1,4 @@
 #pragma once
-#include "Protocol.h"
-
-class BufferSource;
-using BufferSourcePtr = shared_ptr<BufferSource>;
-struct BufferSegment : WSABUF
-{
-	BufferSourcePtr source;
-
-	WSABUF wsaBuf() { return WSABUF{len, buf}; }
-
-	BufferSegment(CHAR* _buf, ULONG _len, const BufferSourcePtr& _ptr) : WSABUF{ _len, _buf }, source(_ptr) {}
-};
 
 class BufferSource
 {
@@ -61,19 +49,7 @@ public:
 		return Sink((CHAR*)&packet, sizeof(T));
 	}
 
-	template<typename T>
-	static BufferSegment Sink(const T& pkt)
-	{
-		int32 pktLen = (int32)pkt.ByteSizeLong();
-		auto segment = SerializePacketHeader(Protocol::GetProtocol<T>(), pktLen);
-
-		if (!pkt.SerializeToArray(segment.buf + sizeof(PacketHeader), pktLen))
-		{
-			return BufferSegment(NULL, 0, NULL);
-		}
-
-		return segment;
-	}
+	static BufferSegment SerializePacketHeader(int32 protocol, int32 pktLen);
 
 	static BufferSegment Sink(CHAR* data, int32 len)
 	{
@@ -84,8 +60,6 @@ public:
 		return BufferSegment(buf, (ULONG)len, buffer);
 	}
 private:
-	static BufferSegment SerializePacketHeader(int32 protocol, int32 pktLen);
-
 	static BufferSourcePtr GetBuffer(int32 len);
 };
 

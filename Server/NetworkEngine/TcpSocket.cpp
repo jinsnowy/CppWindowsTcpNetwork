@@ -12,35 +12,35 @@ TcpSocket::TcpSocket(ServiceBase& service)
 
 TcpSocket::~TcpSocket()
 {
-	dispose("destructor");
+	Dispose("destructor");
 }
 
-bool TcpSocket::setLinger(uint16 onoff, uint16 linger)
+bool TcpSocket::SetLinger(uint16 onoff, uint16 linger)
 {
 	return NetUtils::SetLinger(_socket, onoff, linger);
 }
 
-bool TcpSocket::setReuseAddress(bool flag)
+bool TcpSocket::SetReuseAddress(bool flag)
 {
 	return NetUtils::SetReuseAddress(_socket, flag);
 }
 
-bool TcpSocket::setRecvBufferSize(int32 size)
+bool TcpSocket::SetRecvBufferSize(int32 size)
 {
 	return NetUtils::SetRecvBufferSize(_socket, size);
 }
 
-bool TcpSocket::setSendBufferSize(int32 size)
+bool TcpSocket::SetSendBufferSize(int32 size)
 {
 	return NetUtils::SetSendBufferSize(_socket, size);
 }
 
-bool TcpSocket::setTcpNoDelay(bool flag)
+bool TcpSocket::SetTcpNoDelay(bool flag)
 {
 	return NetUtils::SetTcpNoDelay(_socket, flag);
 }
 
-void TcpSocket::dispose(const char* reason)
+void TcpSocket::Dispose(const char* reason)
 {
 	if (_disposed.exchange(true) == false)
 	{
@@ -50,7 +50,7 @@ void TcpSocket::dispose(const char* reason)
 	}
 }
 
-void TcpSocket::close(const char* reason)
+void TcpSocket::Close(const char* reason)
 {
 	LOG_INFO("close : %s", reason);
 
@@ -75,18 +75,18 @@ TcpListenerSocket::TcpListenerSocket(ServiceBase& service)
 {
 }
 
-bool TcpListenerSocket::bind(uint16 port)
+bool TcpListenerSocket::Bind(uint16 port)
 {
 	_bindEndPoint = EndPoint("127.0.0.1", port);
 	return NetUtils::Bind(_socket, _bindEndPoint);
 }
 
-bool TcpListenerSocket::listen(int32 backLog)
+bool TcpListenerSocket::Listen(int32 backLog)
 {
 	return NetUtils::Listen(_socket, backLog);
 }
 
-bool TcpListenerSocket::setUpdateAcceptSocket(SOCKET acceptSocket)
+bool TcpListenerSocket::SetUpdateAcceptSocket(SOCKET acceptSocket)
 {
 	return NetUtils::SetUpdateAcceptSocket(acceptSocket, _socket);
 }

@@ -37,7 +37,7 @@ public:
 public:
 	SessionPtr GetSession() { return _session.lock(); }
 
-	SOCKET GetSocket() { return _socket.getSocket(); };
+	SOCKET GetSocket() { return _socket.GetSocket(); };
 
 	RecvBuffer& GetRecvBuffer() { return _recvBuffer; }
 

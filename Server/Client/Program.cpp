@@ -5,7 +5,6 @@
 
 #include "ClientService.h"
 #include "PlayerSession.h"
-#include "UserProtocol.h"
 
 using namespace std;
 
@@ -14,7 +13,6 @@ int main(int argc, char** argv)
     _CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
 
     NetUtils::initialize();
-    Logger::initialize();
     MemoryPool::initialize();
 
     ClientSessionFactory sessionFactory = []() { return shared_ptr<ClientSession>(new PlayerSession()); };
@@ -28,7 +26,7 @@ int main(int argc, char** argv)
             UserProtocol::TEST test;
             test.set_text("hello world!");
 
-            service.Broadcast(BufferSource::Sink(test));
+            service.Broadcast(BufferSegment::Serialize(test));
 
             std::this_thread::sleep_for(200ms);
         }

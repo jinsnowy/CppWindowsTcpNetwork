@@ -20,6 +20,7 @@ using UniqueLock = std::unique_lock<std::mutex>;
 using LockGuard = std::lock_guard<std::mutex>;
 
 using AlarmPtr = std::shared_ptr<class Alarm>;
+using BufferSourcePtr = shared_ptr<class BufferSource>;
 using SessionPtr = std::shared_ptr<class Session>;
 using SessionWeakPtr = std::weak_ptr<class Session>;
 using SessionPtrCRef = const SessionPtr&;
@@ -46,6 +47,8 @@ static const char* get_bool_str(const bool& v) { return v ? "true" : "false"; }
 #define safe_close_handle(h) if (h != NULL) { CloseHandle(h); h = NULL; }
 #define get_last_err_msg() WSAGetLastErrorMsg().c_str()
 #define get_last_err_msg_code(errCode) WSAGetLastErrorMsg(errCode).c_str()
+#define size16(val)		static_cast<int16>(sizeof(val))
+#define size32(val)		static_cast<int32>(sizeof(val))
 
 #define CRASH(cause)						\
 {											\

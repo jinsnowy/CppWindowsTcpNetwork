@@ -52,17 +52,14 @@
     <Filter Include="Task">
       <UniqueIdentifier>{29a3626b-f726-4525-bb38-6ddc133ea089}</UniqueIdentifier>
     </Filter>
-    <Filter Include="UserProtocol">
-      <UniqueIdentifier>{8083a7b4-0d10-44aa-b29b-c95e47db023a}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="UserProtocol\Protobuf">
-      <UniqueIdentifier>{50d66f21-069c-4c3c-b79c-cf37a3d2842c}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Service">
       <UniqueIdentifier>{cec31a39-bdd1-463e-a6e1-db943edd82ff}</UniqueIdentifier>
     </Filter>
     <Filter Include="Alaram">
       <UniqueIdentifier>{8c8d7194-af3b-4a05-aab2-c5466e1e8a03}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Database">
+      <UniqueIdentifier>{fea54945-713f-4a9b-8217-7d132b6157ff}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -202,18 +199,6 @@
     <ClInclude Include="TaskSerializer.h">
       <Filter>Task</Filter>
     </ClInclude>
-    <ClInclude Include="UserProtocol.h">
-      <Filter>UserProtocol</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Include\protocol\Enum.pb.h">
-      <Filter>UserProtocol\Protobuf</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Include\protocol\Struct.pb.h">
-      <Filter>UserProtocol\Protobuf</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Include\protocol\UserProtocol.pb.h">
-      <Filter>UserProtocol\Protobuf</Filter>
-    </ClInclude>
     <ClInclude Include="TaskScheduler.h">
       <Filter>Task</Filter>
     </ClInclude>
@@ -234,6 +219,24 @@
     </ClInclude>
     <ClInclude Include="AlarmManager.h">
       <Filter>Alaram</Filter>
+    </ClInclude>
+    <ClInclude Include="DBConnection.h">
+      <Filter>Database</Filter>
+    </ClInclude>
+    <ClInclude Include="DBConnectionPool.h">
+      <Filter>Database</Filter>
+    </ClInclude>
+    <ClInclude Include="DBBind.h">
+      <Filter>Database</Filter>
+    </ClInclude>
+    <ClInclude Include="DBModel.h">
+      <Filter>Database</Filter>
+    </ClInclude>
+    <ClInclude Include="DBSynchronizer.h">
+      <Filter>Database</Filter>
+    </ClInclude>
+    <ClInclude Include="BufferSegment.h">
+      <Filter>Buffer</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -340,18 +343,6 @@
     <ClCompile Include="TaskSerializer.cpp">
       <Filter>Task</Filter>
     </ClCompile>
-    <ClCompile Include="UserProtocol.cpp">
-      <Filter>UserProtocol</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\Include\protocol\Enum.pb.cc">
-      <Filter>UserProtocol\Protobuf</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\Include\protocol\Struct.pb.cc">
-      <Filter>UserProtocol\Protobuf</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\Include\protocol\UserProtocol.pb.cc">
-      <Filter>UserProtocol\Protobuf</Filter>
-    </ClCompile>
     <ClCompile Include="TaskScheduler.cpp">
       <Filter>Task</Filter>
     </ClCompile>
@@ -373,6 +364,24 @@
     <ClCompile Include="AlarmManager.cpp">
       <Filter>Alaram</Filter>
     </ClCompile>
+    <ClCompile Include="DBConnection.cpp">
+      <Filter>Database</Filter>
+    </ClCompile>
+    <ClCompile Include="DBConnectionPool.cpp">
+      <Filter>Database</Filter>
+    </ClCompile>
+    <ClCompile Include="DBBind.cpp">
+      <Filter>Database</Filter>
+    </ClCompile>
+    <ClCompile Include="DBModel.cpp">
+      <Filter>Database</Filter>
+    </ClCompile>
+    <ClCompile Include="DBSynchronizer.cpp">
+      <Filter>Database</Filter>
+    </ClCompile>
+    <ClCompile Include="BufferSegment.cpp">
+      <Filter>Buffer</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Xml Include="..\..\Config.xml" />
@@ -381,14 +390,5 @@
     <None Include="..\..\CopyGenerated.bat" />
     <None Include="..\..\.gitignore" />
     <None Include="..\..\README.md" />
-    <None Include="..\..\UserProtocol.proto">
-      <Filter>UserProtocol</Filter>
-    </None>
-    <None Include="..\..\Enum.proto">
-      <Filter>UserProtocol</Filter>
-    </None>
-    <None Include="..\..\Struct.proto">
-      <Filter>UserProtocol</Filter>
-    </None>
   </ItemGroup>
 </Project>

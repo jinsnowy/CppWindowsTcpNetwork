@@ -1,6 +1,6 @@
+#pragma once
 #include "ServerSession.h"
 #include "Player.h"
-#include "UserProtocol.h"
 
 class UserSession : public ServerSession
 {

@@ -17,6 +17,15 @@
     <Filter Include="UserSession">
       <UniqueIdentifier>{3a2ef896-5281-4379-a30e-3f3fceab19d5}</UniqueIdentifier>
     </Filter>
+    <Filter Include="GameDB">
+      <UniqueIdentifier>{ce468401-66da-410c-81ea-42311b855b0c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="UserProtocol">
+      <UniqueIdentifier>{9a520d6c-68bf-4ad6-a194-1bd5fde087f9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="UserProtocol\Protobuf">
+      <UniqueIdentifier>{0555d97e-47da-4276-aa11-dc477a0e4bdb}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Program.cpp">
@@ -35,6 +44,18 @@
     <ClCompile Include="UserSession.cpp">
       <Filter>UserSession</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\Include\protocol\Enum.pb.cc">
+      <Filter>UserProtocol\Protobuf</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Include\protocol\Struct.pb.cc">
+      <Filter>UserProtocol\Protobuf</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Include\protocol\UserProtocol.pb.cc">
+      <Filter>UserProtocol\Protobuf</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Include\protocol\UserProtocolHandler.cpp">
+      <Filter>UserProtocol</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h" />
@@ -50,5 +71,33 @@
     <ClInclude Include="UserSession.h">
       <Filter>UserSession</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\Include\protocol\Enum.pb.h">
+      <Filter>UserProtocol\Protobuf</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\protocol\Struct.pb.h">
+      <Filter>UserProtocol\Protobuf</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\protocol\UserProtocol.pb.h">
+      <Filter>UserProtocol\Protobuf</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\protocol\UserProtocolHandler.h">
+      <Filter>UserProtocol</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Xml Include="GameDB.xml">
+      <Filter>GameDB</Filter>
+    </Xml>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\Struct.proto">
+      <Filter>UserProtocol</Filter>
+    </None>
+    <None Include="..\..\UserProtocol.proto">
+      <Filter>UserProtocol</Filter>
+    </None>
+    <None Include="..\..\Enum.proto">
+      <Filter>UserProtocol</Filter>
+    </None>
   </ItemGroup>
 </Project>

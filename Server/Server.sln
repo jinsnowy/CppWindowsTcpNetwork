@@ -15,6 +15,10 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Client", "Client\Client.vcx
 		{90AD9CD1-D851-4D78-8188-90D9DE68DFE5} = {90AD9CD1-D851-4D78-8188-90D9DE68DFE5}
 	EndProjectSection
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tools", "Tools", "{0375DC55-B666-49C9-8995-665431899EFE}"
+EndProject
+Project("{888888A0-9F3D-457C-B088-3A5042F75D52}") = "ProtocolGenerator", "..\Tools\ProtocolGenerator\ProtocolGenerator.pyproj", "{418F0C49-3E81-4952-80B7-92D89D46802C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -61,9 +65,18 @@ Global
 		{CC2D8EAD-6D46-46FD-81B2-674CABA8DD07}.Release|x64.Build.0 = Release|x64
 		{CC2D8EAD-6D46-46FD-81B2-674CABA8DD07}.Release|x86.ActiveCfg = Release|Win32
 		{CC2D8EAD-6D46-46FD-81B2-674CABA8DD07}.Release|x86.Build.0 = Release|Win32
+		{418F0C49-3E81-4952-80B7-92D89D46802C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{418F0C49-3E81-4952-80B7-92D89D46802C}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{418F0C49-3E81-4952-80B7-92D89D46802C}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{418F0C49-3E81-4952-80B7-92D89D46802C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{418F0C49-3E81-4952-80B7-92D89D46802C}.Release|x64.ActiveCfg = Release|Any CPU
+		{418F0C49-3E81-4952-80B7-92D89D46802C}.Release|x86.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{418F0C49-3E81-4952-80B7-92D89D46802C} = {0375DC55-B666-49C9-8995-665431899EFE}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {E3467D8A-3DF0-41B4-9000-755FFB76DA3D}

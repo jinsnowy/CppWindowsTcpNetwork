@@ -139,16 +139,21 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
     <PostBuildEvent>
-      <Command>
-      </Command>
+      <Command>CD $(SolutionDir)..\
+CALL GenPackets.bat
+CALL GenProtocols.bat</Command>
     </PostBuildEvent>
     <PreBuildEvent>
-      <Command>CD $(SolutionDir)..\
-CALL GenPackets.bat</Command>
+      <Command>
+      </Command>
     </PreBuildEvent>
     <Lib>
       <AdditionalLibraryDirectories>$(SolutionDir)..\Lib\$(Configuration);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Lib>
+    <PreLinkEvent>
+      <Command>
+      </Command>
+    </PreLinkEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
@@ -171,25 +176,33 @@ CALL GenPackets.bat</Command>
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
     <PreBuildEvent>
-      <Command>CD $(SolutionDir)..\
-CALL GenPackets.bat</Command>
-    </PreBuildEvent>
-    <PostBuildEvent>
       <Command>
       </Command>
+    </PreBuildEvent>
+    <PostBuildEvent>
+      <Command>CD $(SolutionDir)..\
+CALL GenPackets.bat
+CALL GenProtocols.bat</Command>
     </PostBuildEvent>
     <Lib>
       <AdditionalLibraryDirectories>$(SolutionDir)..\Lib\$(Configuration);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Lib>
+    <PreLinkEvent>
+      <Command>
+      </Command>
+    </PreLinkEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\Include\protocol\Enum.pb.h" />
-    <ClInclude Include="..\..\Include\protocol\Struct.pb.h" />
-    <ClInclude Include="..\..\Include\protocol\UserProtocol.pb.h" />
     <ClInclude Include="Alarm.h" />
     <ClInclude Include="AlarmManager.h" />
+    <ClInclude Include="BufferSegment.h" />
     <ClInclude Include="ClientService.h" />
     <ClInclude Include="ClientSession.h" />
+    <ClInclude Include="DBBind.h" />
+    <ClInclude Include="DBConnection.h" />
+    <ClInclude Include="DBConnectionPool.h" />
+    <ClInclude Include="DBModel.h" />
+    <ClInclude Include="DBSynchronizer.h" />
     <ClInclude Include="ITaskCreator.h" />
     <ClInclude Include="PoolObject.h" />
     <ClInclude Include="Task.h" />
@@ -220,7 +233,6 @@ CALL GenPackets.bat</Command>
     <ClInclude Include="CorePch.h" />
     <ClInclude Include="NetUtils.h" />
     <ClInclude Include="TlsMemory.h" />
-    <ClInclude Include="UserProtocol.h" />
     <ClInclude Include="Xml.h" />
     <ClInclude Include="Timer.h" />
     <ClInclude Include="Common.h" />
@@ -242,23 +254,17 @@ CALL GenPackets.bat</Command>
     <ClInclude Include="Protocol.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\Include\protocol\Enum.pb.cc">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
-    </ClCompile>
-    <ClCompile Include="..\..\Include\protocol\Struct.pb.cc">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
-    </ClCompile>
-    <ClCompile Include="..\..\Include\protocol\UserProtocol.pb.cc">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
-    </ClCompile>
     <ClCompile Include="Alarm.cpp" />
     <ClCompile Include="AlarmManager.cpp" />
+    <ClCompile Include="BufferSegment.cpp" />
     <ClCompile Include="ClientService.cpp" />
     <ClCompile Include="ClientSession.cpp" />
     <ClCompile Include="DateTime.cpp" />
+    <ClCompile Include="DBBind.cpp" />
+    <ClCompile Include="DBConnection.cpp" />
+    <ClCompile Include="DBConnectionPool.cpp" />
+    <ClCompile Include="DBModel.cpp" />
+    <ClCompile Include="DBSynchronizer.cpp" />
     <ClCompile Include="ITaskCreator.cpp" />
     <ClCompile Include="PacketHeader.cpp" />
     <ClCompile Include="PoolObject.cpp" />
@@ -288,7 +294,6 @@ CALL GenPackets.bat</Command>
     <ClCompile Include="SessionManager.cpp" />
     <ClCompile Include="StdMutex.cpp" />
     <ClCompile Include="TlsMemory.cpp" />
-    <ClCompile Include="UserProtocol.cpp" />
     <ClCompile Include="Xml.cpp" />
     <ClCompile Include="EndPoint.cpp" />
     <ClCompile Include="Logger.cpp" />
@@ -312,10 +317,7 @@ CALL GenPackets.bat</Command>
   <ItemGroup>
     <None Include="..\..\.gitignore" />
     <None Include="..\..\CopyGenerated.bat" />
-    <None Include="..\..\Enum.proto" />
     <None Include="..\..\README.md" />
-    <None Include="..\..\Struct.proto" />
-    <None Include="..\..\UserProtocol.proto" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

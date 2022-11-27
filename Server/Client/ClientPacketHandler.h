@@ -1,8 +1,8 @@
 #pragma once
 
-#include "UserProtocol.h"
+#include "protocol/UserProtocolHandler.h"
 
-class ClientPacketHandler : public UserPacketHandler
+class ClientPacketHandler : public UserProtocolPacketHandler
 {
 protected:
 	virtual void onTest(SessionPtrCRef session, UserProtocol::TEST pkt);

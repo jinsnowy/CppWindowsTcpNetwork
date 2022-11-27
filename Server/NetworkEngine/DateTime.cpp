@@ -1,6 +1,6 @@
 #include "pch.h"
 
-DateTime DateTime::now()
+DateTime DateTime::Now()
 {
 	auto t = std::time(NULL);
 	auto date = DateTime();
@@ -9,7 +9,7 @@ DateTime DateTime::now()
 	return date;
 }
 
-DateTime DateTime::utcNow()
+DateTime DateTime::UtcNow()
 {
 	auto t = std::time(NULL);
 	auto date = DateTime();

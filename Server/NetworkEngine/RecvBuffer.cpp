@@ -8,12 +8,12 @@ RecvBuffer::RecvBuffer()
 	_writePos = 0;
 }
 
-void RecvBuffer::clear()
+void RecvBuffer::Clear()
 {
 	_readPos = _writePos = 0;
 }
 
-void RecvBuffer::rotate()
+void RecvBuffer::Rotate()
 {
 	if (_writePos == _readPos)
 	{
@@ -27,7 +27,7 @@ void RecvBuffer::rotate()
 	_writePos = dataSize;
 }
 
-bool RecvBuffer::onDataRecv(int32 recvBytes)
+bool RecvBuffer::OnDataRecv(int32 recvBytes)
 {
 	if (isFree(recvBytes) == false)
 		return false;
@@ -36,7 +36,7 @@ bool RecvBuffer::onDataRecv(int32 recvBytes)
 	return true;
 }
 
-void RecvBuffer::read(int32 readBytes)
+void RecvBuffer::Read(int32 readBytes)
 {
 	_readPos += readBytes;
 }

@@ -9,17 +9,17 @@ class RecvBuffer
 public:
 	RecvBuffer();
 
-	CHAR* getBufferPtr() { return &_buffer[_writePos]; }
-	int32 getLen() { return BUFFER_SIZE - _writePos; }
-
-	CHAR* getBufferPtrRead() { return &_buffer[_readPos]; }
+	CHAR* GetBufferPtr() { return &_buffer[_writePos]; }
+	int32 GetLen() { return BUFFER_SIZE - _writePos; }
+	CHAR* GetBufferPtrRead() { return &_buffer[_readPos]; }
 	
-	void clear();
-	void rotate();
-	bool onDataRecv(int32 recvBytes);
-	void read(int32 readBytes);
-	bool isReadable(int32 bytes) { return _writePos - _readPos >= bytes; }
-	bool isHeaderReadable() { return _writePos - _readPos >= sizeof(PacketHeader); }
+	void Clear();
+	void Rotate();
+	bool OnDataRecv(int32 recvBytes);
+	void Read(int32 readBytes);
+	bool IsReadable(int32 bytes) { return _writePos - _readPos >= bytes; }
+	bool IsHeaderReadable() { return _writePos - _readPos >= sizeof(PacketHeader); }
+
 private:
 	bool isFree(int32 bytes) { return BUFFER_SIZE - _writePos >= bytes; }
 

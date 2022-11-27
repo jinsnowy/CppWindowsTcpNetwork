@@ -1,11 +1,15 @@
 #pragma once
+#include <vector>
+#include <memory>
+#include "PacketHeader.h"
 
+using SessionPtrCRef = const std::shared_ptr<class Session>&;
 class PacketHandler
 {
 public:
-	virtual bool IsValidProtocol(int32 protocol) abstract;
+	virtual bool IsValidProtocol(int protocol) abstract;
 
-	virtual void HandleRecv(SessionPtrCRef session, const PacketHeader& header, CHAR* buffer) abstract;
+	virtual void HandleRecv(SessionPtrCRef session, const PacketHeader& header, char* buffer) abstract;
 
 private:
 	template<typename T>
@@ -20,10 +24,10 @@ private:
 
 protected:
 	template<typename T>
-	T* interpret(CHAR* buffer) { return reinterpret_cast<T*>(buffer); }
+	T* interpret(char* buffer) { return reinterpret_cast<T*>(buffer); }
 
 	template<typename T>
-	T parse(CHAR* buffer, int32 len)
+	T parse(char* buffer, int len)
 	{ 
 		T pkt;
 		pkt.ParseFromArray(buffer + sizeof(PacketHeader), len - sizeof(PacketHeader));
@@ -52,5 +56,5 @@ public:
 	}
 
 private:
-	static vector<PacketHandler*> s_PacketHandler;
+	static std::vector<PacketHandler*> s_PacketHandler;
 };

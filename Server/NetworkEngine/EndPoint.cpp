@@ -1,7 +1,7 @@
 #include "pch.h"
 #include "EndPoint.h"
 
-std::string EndPoint::toString() const
+std::string EndPoint::ToString() const
 {
-	return Format::format("%s:%s", getIpAddress().c_str(), getPort().c_str());
+	return Format::format("%s:%s", GetIpAddress().c_str(), GetPort().c_str());
 }

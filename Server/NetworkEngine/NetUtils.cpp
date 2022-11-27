@@ -78,7 +78,7 @@ bool NetUtils::SetUpdateAcceptSocket(SOCKET socket, SOCKET listenSocket)
 
 bool NetUtils::Bind(SOCKET socket, EndPoint netAddr)
 {
-	return SOCKET_ERROR != ::bind(socket, netAddr.getSockAddr(), sizeof(SOCKADDR_IN));
+	return SOCKET_ERROR != ::bind(socket, netAddr.GetSockAddr(), sizeof(SOCKADDR_IN));
 }
 
 bool NetUtils::BindAnyAddress(SOCKET socket, uint16 port)
@@ -94,7 +94,7 @@ bool NetUtils::BindAnyAddress(SOCKET socket, uint16 port)
 bool NetUtils::GetEndPoint(SOCKET socket, EndPoint& endPoint)
 {
 	int32 sizeOfSockAddress = sizeof(SOCKADDR);
-	return SOCKET_ERROR != ::getpeername(socket, endPoint.getSockAddr(), &sizeOfSockAddress);
+	return SOCKET_ERROR != ::getpeername(socket, endPoint.GetSockAddr(), &sizeOfSockAddress);
 }
 
 bool NetUtils::Listen(SOCKET socket, int32 backLog)
@@ -119,7 +119,7 @@ void NetUtils::Close(SOCKET socket)
 bool NetUtils::ConnectAsync(SOCKET socket, LPWSAOVERLAPPED overlapped, const EndPoint& endPoint)
 {
 	DWORD dwSentBytes = 0;
-	if (!ConnectEx(socket, endPoint.getSockAddr(), sizeof(SOCKADDR), NULL, 0, &dwSentBytes, overlapped))
+	if (!ConnectEx(socket, endPoint.GetSockAddr(), sizeof(SOCKADDR), NULL, 0, &dwSentBytes, overlapped))
 	{
 		int32 errorCode = ::WSAGetLastError();
 

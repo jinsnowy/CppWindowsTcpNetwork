@@ -9,6 +9,7 @@
 #include <cmath>
 
 #include <algorithm>
+#include <bitset>
 #include <mutex>
 #include <memory>
 #include <functional>
@@ -52,13 +53,3 @@ using namespace std;
 #else
 #pragma comment(lib, "libprotobuf.lib")
 #endif
-
-#define GETSET(field, type)\
-type get##field() const { return field;}\
-void set##field(type value) { field = value;}
-
-#define GET(field)\
-type get##field() const { return field;}
-
-#define SET(field, type)\
-void set##field(type value) { field = value;}

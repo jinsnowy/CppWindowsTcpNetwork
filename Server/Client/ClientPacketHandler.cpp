@@ -12,7 +12,7 @@ void ClientPacketHandler::onLoginResponse(SessionPtrCRef session, UserProtocol::
 	session->GetShared<PlayerSession>()->SetPlayer(pkt.player());
 
 	UserProtocol::ENTER_ROOM_REQUEST request;
-	session->GetShared<PlayerSession>()->SendAsync(BufferSource::Sink(request));
+	session->GetShared<PlayerSession>()->SendAsync(BufferSegment::Serialize(request));
 }
 
 void ClientPacketHandler::onEnterRoomResponse(SessionPtrCRef session, UserProtocol::ENTER_ROOM_RESPONSE pkt)

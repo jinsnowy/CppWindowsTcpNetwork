@@ -53,25 +53,25 @@ Listener::~Listener()
 
 bool Listener::start()
 {
-	if (!_listenerSocket.setReuseAddress(true))
+	if (!_listenerSocket.SetReuseAddress(true))
 	{
 		LOG_ERROR("reuse error : %s", get_last_err_msg());
 		return false;
 	}
 
-	if (!_listenerSocket.setLinger(0, 0))
+	if (!_listenerSocket.SetLinger(0, 0))
 	{
 		LOG_ERROR("set no linger error : %s", get_last_err_msg());
 		return false;
 	}
 
-	if (!_listenerSocket.bind(_config.bindPort))
+	if (!_listenerSocket.Bind(_config.bindPort))
 	{
 		LOG_ERROR("bind %hd error : %s", _config.bindPort, get_last_err_msg());
 		return false;
 	}
 
-	if (!_listenerSocket.listen(_config.backLog))
+	if (!_listenerSocket.Listen(_config.backLog))
 	{
 		LOG_ERROR("listen error : %s", get_last_err_msg());
 		return false;
@@ -82,7 +82,7 @@ bool Listener::start()
 		registerAccpet();
 	}
 
-	LOG_INFO("listen... %s", _listenerSocket.getAddress().toString().c_str());
+	LOG_INFO("listen... %s", _listenerSocket.GetAddress().ToString().c_str());
 
 	return true;
 }
@@ -91,12 +91,12 @@ void Listener::stop()
 {
 	_finished = true;
 
-	_listenerSocket.dispose("listener stop");
+	_listenerSocket.Dispose("listener stop");
 }
 
 bool Listener::processAccept(const NetworkPtr& network)
 {
-	if (!_listenerSocket.setUpdateAcceptSocket(network->GetSocket()))
+	if (!_listenerSocket.SetUpdateAcceptSocket(network->GetSocket()))
 	{
 		LOG_ERROR("cannot update socket : %s", get_last_err_msg());
 		return false;
@@ -123,9 +123,9 @@ bool Listener::processAccept(const NetworkPtr& network)
 void Listener::registerAccpet()
 {
 	NetworkPtr network = _config.networkFactory(_listenerSocket.GetServiceBase());
-	LPVOID bufferPtr = network->GetRecvBuffer().getBufferPtr();
+	LPVOID bufferPtr = network->GetRecvBuffer().GetBufferPtr();
 
-	if (!_listenerSocket.accept_async(network->GetSocket(), bufferPtr, on_accept_t(shared_from_this(), network)))
+	if (!_listenerSocket.AcceptAsync(network->GetSocket(), bufferPtr, on_accept_t(shared_from_this(), network)))
 	{
 		if (_finished)
 		{

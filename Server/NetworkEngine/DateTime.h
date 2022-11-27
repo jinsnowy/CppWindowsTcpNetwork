@@ -7,12 +7,12 @@
 class DateTime : protected tm
 {
 public:
-	static DateTime now();
-	static DateTime utcNow();
+	static DateTime Now();
+	static DateTime UtcNow();
 
-	int getYear() const { return tm_year + 1900; }
-	int getDays() const { return tm_mday; }
-	int getMonth() const { return tm_mon + 1; }
+	int Year() const { return tm_year + 1900; }
+	int Day() const { return tm_mday; }
+	int Month() const { return tm_mon + 1; }
 
 	std::string toString(const char* format = "%Y-%m-%d %H:%M:%S") const;
 

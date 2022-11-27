@@ -32,3 +32,8 @@ message ENTER_ROOM_RESPONSE
 {
 	int32 id = 1;
 }
+
+message CLIENT_MOVE_FORWARD
+{
+	int32 id = 1;
+}

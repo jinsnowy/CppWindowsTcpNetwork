@@ -32,26 +32,26 @@ public:
         mInfo.sin_port = htons(port);
     }
 
-	std::string getIpAddress() const
+	std::string GetIpAddress() const
 	{
 		return inet_ntoa(mInfo.sin_addr);
 	}
 
-	std::string getPort() const
+	std::string GetPort() const
 	{
 		return std::to_string(ntohs(mInfo.sin_port));
 	}
 
-	const SOCKADDR* getSockAddr() const
+	const SOCKADDR* GetSockAddr() const
 	{
 		return (const SOCKADDR*)(&mInfo);
 	}
 
-	SOCKADDR* getSockAddr() { return (SOCKADDR*)(&mInfo); }
+	SOCKADDR* GetSockAddr() { return (SOCKADDR*)(&mInfo); }
 	
-	constexpr size_t getSize() const { return sizeof(SOCKADDR); }
+	constexpr size_t GetSize() const { return sizeof(SOCKADDR); }
 
-	std::string toString() const;
+	std::string ToString() const;
 
 	static bool resolve(const char* hostAddress, uint16 port, EndPoint& endPoint)
 	{

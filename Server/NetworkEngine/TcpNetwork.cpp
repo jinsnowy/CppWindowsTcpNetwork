@@ -111,7 +111,7 @@ TcpNetwork::TcpNetwork(ServiceBase& ServiceBase)
 
 TcpNetwork::~TcpNetwork()
 {
-	_socket.dispose("network destructor");
+	_socket.Dispose("network destructor");
 }
 
 void TcpNetwork::AttachSession(SessionPtr session)
@@ -145,7 +145,7 @@ void TcpNetwork::RequireHandshake(Handshake* handshake)
 
 void TcpNetwork::recv(DWORD recvBytes)
 {
-	if (!_recvBuffer.onDataRecv(recvBytes))
+	if (!_recvBuffer.OnDataRecv(recvBytes))
 	{
 		disconnectOnError("recv buffer overflows");
 		return;
@@ -160,13 +160,13 @@ void TcpNetwork::recv(DWORD recvBytes)
 
 	PacketHandler* handler = nullptr;
 
-	while (_recvBuffer.isHeaderReadable())
+	while (_recvBuffer.IsHeaderReadable())
 	{
-		CHAR* bufferToRead = _recvBuffer.getBufferPtrRead();
+		CHAR* bufferToRead = _recvBuffer.GetBufferPtrRead();
 
 		PacketHeader header = PacketHeader::Peek(bufferToRead);
 
-		if (!_recvBuffer.isReadable(header.size))
+		if (!_recvBuffer.IsReadable(header.size))
 		{
 			break;
 		}
@@ -175,7 +175,7 @@ void TcpNetwork::recv(DWORD recvBytes)
 		{
 			handler->HandleRecv(session, header, bufferToRead);
 
-			_recvBuffer.read(header.size);
+			_recvBuffer.Read(header.size);
 		}
 		else
 		{
@@ -184,7 +184,7 @@ void TcpNetwork::recv(DWORD recvBytes)
 		}
 	}
 
-	_recvBuffer.rotate();
+	_recvBuffer.Rotate();
 }
 
 void TcpNetwork::SendAsync(const BufferSegment& segment)
@@ -203,7 +203,7 @@ void TcpNetwork::SendAsync(const BufferSegment& segment)
 
 void TcpNetwork::DisconnectAsync()
 {
-	if (false == _socket.disconnect_async(on_disconnect_t(shared_from_this())))
+	if (false == _socket.DisconnectAsync(on_disconnect_t(shared_from_this())))
 	{
 		LOG_ERROR("disconnect failed %s", get_last_err_msg());
 	}
@@ -211,21 +211,21 @@ void TcpNetwork::DisconnectAsync()
 
 void TcpNetwork::ConnectAsync(const EndPoint& endPoint)
 {
-	if (NetUtils::SetReuseAddress(_socket.getSocket(), true) == false)
+	if (NetUtils::SetReuseAddress(_socket.GetSocket(), true) == false)
 	{
-		LOG_ERROR("connect failed to %s, %s", endPoint.toString().c_str(), get_last_err_msg());
+		LOG_ERROR("connect failed to %s, %s", endPoint.ToString().c_str(), get_last_err_msg());
 		return;
 	}
 
-	if (NetUtils::BindAnyAddress(_socket.getSocket(), 0) == false)
+	if (NetUtils::BindAnyAddress(_socket.GetSocket(), 0) == false)
 	{
-		LOG_ERROR("connect failed to %s, %s", endPoint.toString().c_str(), get_last_err_msg());
+		LOG_ERROR("connect failed to %s, %s", endPoint.ToString().c_str(), get_last_err_msg());
 		return;
 	}
 
-	if (!_socket.connect_async(endPoint, on_connect_t(shared_from_this(), endPoint)))
+	if (!_socket.ConnectAsync(endPoint, on_connect_t(shared_from_this(), endPoint)))
 	{
-		LOG_ERROR("connect failed to %s, %s", endPoint.toString().c_str(), get_last_err_msg());
+		LOG_ERROR("connect failed to %s, %s", endPoint.ToString().c_str(), get_last_err_msg());
 	}
 }
 
@@ -296,7 +296,7 @@ bool TcpNetwork::flushInternal()
 		segments = std::move(_pendingSegment);
 	}
 	
-	return _socket.write_async(buffers, on_send_t(shared_from_this(), std::move(segments)));
+	return _socket.WriteAsync(buffers, on_send_t(shared_from_this(), std::move(segments)));
 }
 
 void TcpNetwork::registerRecv(bool init)
@@ -306,10 +306,10 @@ void TcpNetwork::registerRecv(bool init)
 
 	if (init)
 	{
-		_recvBuffer.clear();
+		_recvBuffer.Clear();
 	}
 
-	if (!_socket.read_async(_recvBuffer.getBufferPtr(), _recvBuffer.getLen(), on_recv_t(shared_from_this())))
+	if (!_socket.ReadAsync(_recvBuffer.GetBufferPtr(), _recvBuffer.GetLen(), on_recv_t(shared_from_this())))
 	{
 		int32 errCode = ::WSAGetLastError();
 
@@ -322,7 +322,7 @@ void TcpNetwork::disconnectOnError(const char* reason)
 	if (!IsConnected())
 		return;
 
-	if (!_socket.disconnect_async(on_disconnect_t(shared_from_this())))
+	if (!_socket.DisconnectAsync(on_disconnect_t(shared_from_this())))
 	{
 		LOG_ERROR("disconnect failed on %s : %s", reason, get_last_err_msg());
 	}

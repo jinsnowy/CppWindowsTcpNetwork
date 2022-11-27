@@ -21,7 +21,7 @@ static const char* GetTag(ELogLevel level)
 	}
 }
 
-Logger* GLogger = nullptr;
+Logger* GLogger = Logger::GetInstance();
 
 Logger::Logger()
 	:
@@ -58,17 +58,17 @@ Logger::~Logger()
 	}
 }
 
-void Logger::initialize()
+void Logger::SetFlushDuration(int durationMs)
 {
-	GLogger = Logger::GetInstance();
+	mFlushDurationMilliSec = durationMs;
 }
 
-void Logger::out(ELogLevel level, std::thread::id thread_id, int line, const char* function, const char* fmt, ...)
+void Logger::Out(ELogLevel level, std::thread::id thread_id, int line, const char* function, const char* fmt, ...)
 {
 	if (level < mLogLevel)
 		return;
 
-	DateTime now = DateTime::now();
+	DateTime now = DateTime::Now();
 
 	const char* threadIdStr = StdThreadIdStr::Get();
 
@@ -98,8 +98,8 @@ void Logger::write(const std::string& logs)
 	{
 		if (mOutFile.is_open() == false)
 		{
-			DateTime now = DateTime::now();
-			std::string log_file_name = Format::format("%s%d.%d.%d.log", programName.c_str(), now.getYear(), now.getMonth(), now.getDays());
+			DateTime now = DateTime::Now();
+			std::string log_file_name = Format::format("%s%d.%d.%d.log", programName.c_str(), now.Year(), now.Month(), now.Day());
 			std::string log_file_path = Format::format("%s\\%s", basePath.c_str(), log_file_name.c_str());
 
 			mOutFile.open(log_file_path, std::ios_base::out | std::ios_base::app);

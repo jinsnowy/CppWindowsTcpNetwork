@@ -15,18 +15,18 @@ private:
 public:
 	TcpSocket(ServiceBase& service);
 	
-	SOCKET   getSocket() { return _socket; }
+	SOCKET   GetSocket() { return _socket; }
 
 	virtual ~TcpSocket();
 
-	bool setLinger(uint16 onoff, uint16 linger);
-	bool setReuseAddress(bool flag);
-	bool setRecvBufferSize(int32 size);
-	bool setSendBufferSize(int32 size);
-	bool setTcpNoDelay(bool flag);
+	bool SetLinger(uint16 onoff, uint16 linger);
+	bool SetReuseAddress(bool flag);
+	bool SetRecvBufferSize(int32 size);
+	bool SetSendBufferSize(int32 size);
+	bool SetTcpNoDelay(bool flag);
 
-	void dispose(const char* reason);
-	void close(const char* reason);
+	void Dispose(const char* reason);
+	void Close(const char* reason);
 };
 
 class TcpAsyncSocket : public TcpSocket
@@ -35,7 +35,7 @@ public:
 	TcpAsyncSocket(ServiceBase& service);
 
 	template<typename AsyncIoCompleteRoutine>
-	bool write_async(char* buffer, DWORD len, AsyncIoCompleteRoutine&& callback)
+	bool WriteAsync(char* buffer, DWORD len, AsyncIoCompleteRoutine&& callback)
 	{
 		IoEvent* ioEvent = makeWriteTask(std::forward<AsyncIoCompleteRoutine>(callback));
 	
@@ -49,7 +49,7 @@ public:
 	}
 
 	template<typename AsyncIoCompleteRoutine>
-	bool write_async(vector<WSABUF> buffers, AsyncIoCompleteRoutine&& callback)
+	bool WriteAsync(vector<WSABUF> buffers, AsyncIoCompleteRoutine&& callback)
 	{
 		IoEvent* ioEvent = makeWriteTask(std::forward<AsyncIoCompleteRoutine>(callback));
 
@@ -64,7 +64,7 @@ public:
 	}
 
 	template<typename AsyncIoCompleteRoutine>
-	bool read_async(char* buffer, ULONG len, AsyncIoCompleteRoutine&& callback)
+	bool ReadAsync(char* buffer, ULONG len, AsyncIoCompleteRoutine&& callback)
 	{
 		IoEvent* ioEvent = makeReadTask(std::forward<AsyncIoCompleteRoutine>(callback));
 
@@ -80,7 +80,7 @@ public:
 
 
 	template<typename AsyncIoCompleteRoutine>
-	bool connect_async(const EndPoint& endPoint, AsyncIoCompleteRoutine&& callback)
+	bool ConnectAsync(const EndPoint& endPoint, AsyncIoCompleteRoutine&& callback)
 	{
 		IoEvent* ioEvent = makeConnectTask(std::forward<AsyncIoCompleteRoutine>(callback));
 
@@ -95,7 +95,7 @@ public:
 	}
 
 	template<typename AsyncIoCompleteRoutine>
-	bool disconnect_async(AsyncIoCompleteRoutine&& callback)
+	bool DisconnectAsync(AsyncIoCompleteRoutine&& callback)
 	{
 		IoEvent* ioEvent = makeDisconnectTask(std::forward<AsyncIoCompleteRoutine>(callback));
 
@@ -124,16 +124,16 @@ private:
 public:
 	TcpListenerSocket(ServiceBase& service);
 
-	EndPoint getAddress() { return _bindEndPoint; }
+	EndPoint GetAddress() { return _bindEndPoint; }
 
-	bool bind(uint16 port);
+	bool Bind(uint16 port);
 
-	bool listen(int32 backLog = SOMAXCONN);
+	bool Listen(int32 backLog = SOMAXCONN);
 
-	bool setUpdateAcceptSocket(SOCKET acceptSocket);
+	bool SetUpdateAcceptSocket(SOCKET acceptSocket);
 
 	template<typename OnAcceptCallback>
-	bool accept_async(SOCKET acceptSocket, LPVOID recvBuf, OnAcceptCallback&& onAccept)
+	bool AcceptAsync(SOCKET acceptSocket, LPVOID recvBuf, OnAcceptCallback&& onAccept)
 	{
 		IoEvent* ioEvent = makeAcceptTask(std::forward<OnAcceptCallback>(onAccept));
 
