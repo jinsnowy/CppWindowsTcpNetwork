@@ -2,7 +2,9 @@
 .vs
 
 # Generated
-Include/boost/
+Include/
+Binary/
+Lib/
 
 # Compiled Object files
 *.slo
